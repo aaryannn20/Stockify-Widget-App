@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-sdk tools:overrideLibrary="androidx.browser,com.google.firebase.iid"/>
+    <application
+        android:name="com.starorigins.stockify.widgetapp.StocksApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/StocksWidget.App.Theme"
+        tools:replace="android:icon">
+
+        <activity
+            android:exported="true"
+            android:name="com.starorigins.stockify.widgetapp.home.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/Theme.App.Starting">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.starorigins.stockify.widgetapp.portfolio.AddPositionActivity"
+            android:label="@string/add_position"
+            android:theme="@style/AddPositionTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:exported="true"
+            android:name="com.starorigins.stockify.widgetapp.settings.WidgetSettingsActivity"
+            android:label="@string/action_Settings"
+            android:theme="@style/WidgetSettingsTheme"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.starorigins.stockify.widgetapp.portfolio.search.SearchActivity"
+            android:label="@string/action_search"
+            android:theme="@style/SearchTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.starorigins.stockify.widgetapp.news.QuoteDetailActivity"
+            android:label="@string/news_feed"
+            android:theme="@style/NewsFeedActivityTheme"
+            android:parentActivityName="com.starorigins.stockify.widgetapp.home.MainActivity" />
+        <activity
+            android:name="com.starorigins.stockify.widgetapp.news.GraphActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/GraphActivityTheme" />
+        <activity
+            android:name="com.starorigins.stockify.widgetapp.settings.WebViewActivity"
+            android:theme="@style/WebViewTheme" />
+        <activity
+            android:name="com.starorigins.stockify.widgetapp.debug.DbViewerActivity"
+            android:theme="@style/DbViewerTheme" />
+
+        <receiver
+            android:name="com.starorigins.stockify.widgetapp.UpdateReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.starorigins.stockify.widgetapp.widget.RefreshReceiver"
+            android:enabled="true" />
+        <receiver
+            android:name="com.starorigins.stockify.widgetapp.notifications.DailySummaryNotificationReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name="com.starorigins.stockify.widgetapp.widget.WidgetClickReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.starorigins.stockify.widgetapp.WIDGET_CLICK" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:exported="true"
+            android:name="com.starorigins.stockify.widgetapp.widget.StockWidget"
+            android:label="@string/widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget" />
+        </receiver>
+
+        <service
+            android:name="com.starorigins.stockify.widgetapp.widget.RemoteStockProviderService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <!-- File provider -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

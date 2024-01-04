@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <string-array name="layout_types">
+    <item>Animated</item>
+    <item>Tabs</item>
+    <item>Fixed</item>
+    <item>My portfolio</item>
+  </string-array>
+
+    <string-array name="widget_width_types">
+    <item>Default</item>
+    <item>Single stock in a row</item>
+  </string-array>
+
+    <string-array name="backgrounds">
+    <item>System</item>
+    <item>Transparent</item>
+    <item>Translucent</item>
+  </string-array>
+
+  <string-array name="text_colors">
+    <item>System</item>
+    <item>Light</item>
+    <item>Dark</item>
+  </string-array>
+
+</resources>

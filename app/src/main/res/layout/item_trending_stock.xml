@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newsContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingStart="4dp"
+      android:paddingTop="4dp"
+      android:paddingBottom="8dp"
+      tools:layout_height="100dp">
+
+    <TextView
+        android:id="@+id/ticker"
+        style="@style/Widget.StocksWidget.TextView.TitleMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="0.4"
+        android:ellipsize="end"
+        android:gravity="center_vertical|start"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.StocksWidget.TitleMedium"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="GOOG" />
+
+    <TextView
+        android:id="@+id/name"
+        style="@style/Widget.StocksWidget.TextView.LabelMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ticker"
+        tools:text="Google Inc" />
+
+    <com.robinhood.ticker.TickerView
+        android:id="@+id/totalValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_vertical|start"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.StocksWidget.TickerBold"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ticker"
+        app:layout_constraintVertical_bias="0.04000002"
+        tools:text="555.02" />
+
+    <com.robinhood.ticker.TickerView
+        android:id="@+id/changePercent"
+        style="@style/Widget.StocksWidget.TextView.BodyMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_vertical|end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.StocksWidget.BodyMedium"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/totalValue"
+        tools:text="5.02%" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
