@@ -15,46 +15,43 @@
 
     <TextView
         android:id="@+id/news_source"
+        style="@style/Widget.StocksWidget.TextView.NewsSource"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="2dp"
+        android:textAppearance="@style/TextAppearance.StocksWidget.NewsSource"
+        android:textSize="13sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textAppearance="@style/TextAppearance.StocksWidget.NewsSource"
-        tools:text="yahoo"
-        style="@style/Widget.StocksWidget.TextView.NewsSource"
-        />
+        tools:text="yahoo" />
 
     <TextView
         android:id="@+id/published_at"
+        style="@style/Widget.StocksWidget.TextView.NewsPublished"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
         android:gravity="end"
+        android:textAppearance="@style/TextAppearance.StocksWidget.NewsPublished"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textAppearance="@style/TextAppearance.StocksWidget.NewsPublished"
-        tools:text="January 5th"
-        style="@style/Widget.StocksWidget.TextView.NewsPublished"
-        />
+        tools:text="January 5th" />
 
     <TextView
         android:id="@+id/news_title"
+        style="@style/Widget.StocksWidget.TextView.BodyLarge"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
         android:ellipsize="end"
+        android:fontFamily="@font/titilliumweb_semi_bold"
         android:maxLines="3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/thumbnail"
-        app:layout_constraintTop_toBottomOf="@id/news_source"
         android:textAppearance="@style/TextAppearance.StocksWidget.BodyLarge"
         android:textColor="?attr/colorOnSurface"
-        tools:text="Stock market rises!"
-        style="@style/Widget.StocksWidget.TextView.BodyLarge"
-        />
+        app:layout_constraintEnd_toStartOf="@id/thumbnail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/news_source"
+        tools:text="Stock market rises!" />
 
     <ImageView
         android:layout_width="0dp"

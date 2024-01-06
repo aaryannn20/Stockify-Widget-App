@@ -4,12 +4,8 @@
   <color name="disabled_grey">#ffbdbdbd</color>
   <color name="unselected_grey">#98545454</color>
   <color name="accent_fallback">#be6663</color>
-  <color name="card_bg">#fbfcfa</color>
-  <color name="card_shadow">#10000000</color>
     <color name="divider">#aaaa</color>
-    <color name="ic_launcher_background">#2A2A2A</color>
-
-  <color name="black">#000000</color>
+    <color name="black">#000000</color>
   <color name="white">#ffffff</color>
     <color name="transparent">#00000000</color>
     <color name="change_positive">#66BB6A</color>

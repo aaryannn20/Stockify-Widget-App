@@ -8,6 +8,7 @@ import com.starorigins.stockify.widgetapp.analytics.Analytics
 import com.starorigins.stockify.widgetapp.model.StocksProvider
 import com.starorigins.stockify.widgetapp.model.StocksProvider.FetchState
 import com.starorigins.stockify.widgetapp.R
+import com.starorigins.stockify.widgetapp.AppPreferences
 import com.google.android.material.color.DynamicColors
 import com.starorigins.stockify.widgetapp.showDialog
 import kotlinx.coroutines.delay
@@ -24,14 +25,14 @@ abstract class BaseActivity<T: ViewBinding> : AppCompatActivity() {
   private var isErrorDialogShowing = false
   @Inject lateinit var analytics: Analytics
   @Inject lateinit var stocksProvider: StocksProvider
-  @Inject lateinit var appPreferences: com.starorigins.stockify.widgetapp.AppPreferences
+  @Inject lateinit var appPreferences: AppPreferences
 
   override fun onCreate(
       savedInstanceState: Bundle?
   ) {
     super.onCreate(savedInstanceState)
     DynamicColors.applyToActivityIfAvailable(this)
-    if (appPreferences.themePref == com.starorigins.stockify.widgetapp.AppPreferences.JUST_BLACK_THEME) {
+    if (appPreferences.themePref == AppPreferences.JUST_BLACK_THEME) {
       theme.applyStyle(R.style.AppTheme_Overlay_JustBlack, true)
     }
     setContentView(binding.root)

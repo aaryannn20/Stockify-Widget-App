@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-  <string name="widget_label" translatable="false">Stocks Tracker Widget</string>
+  <string name="widget_label" translatable="false">Stockify Widget</string>
   <string name="google_news_endpoint" translatable="false">https://news.google.com/</string>
   <string name="yahoo_news_endpoint" translatable="false">https://finance.yahoo.com/news/</string>
   <string name="yahoo_finance_endpoint" translatable="false">https://finance.yahoo.com/</string>
@@ -10,18 +10,17 @@
   <string name="yahoo_initial_load_endpoint" translatable="false">https://finance.yahoo.com/</string>
   <string name="yahoo_endpoint_quote_details" translatable="false">https://query1.finance.yahoo.com/v11/finance/</string>
   <string name="historical_data_endpoint" translatable="false">https://query1.finance.yahoo.com/v8/finance/</string>
-  <string name="github_endoint" translatable="false">https://api.github.com/</string>
   <string name="apewisdom_endpoint" translatable="false">https://apewisdom.io/api/v1.0/</string>
     <string name="dotdotdot" translatable="false">…</string>
 
     <string name="action_portfolio">Watchlist</string>
+  <string name="refresh_updated_message">Refresh interval updated</string>
   <string name="action_widgets">Widgets</string>
   <string name="action_search">Search</string>
   <string name="action_feed">Trending</string>
   <string name="action_settings">Settings</string>
   <string name="app_settings">Settings</string>
   <string name="news_feed">Trending</string>
-  <string name="trending_stocks">Trending stocks</string>
   <string name="action_Settings">Widget Settings</string>
     <string name="bg">Widget background</string>
   <string name="layout_type">Widget type</string>
@@ -38,6 +37,10 @@
   <string name="setting_currency_desc">Show currency in the widget</string>
     <string name="bg_updated_message">Background updated</string>
   <string name="layout_updated_message">Layout type updated</string>
+  <string name="notification_alerts">Notification alerts</string>
+  <string name="notification_alerts_desc">Receive notification alerts</string>
+  <string name="update_interval">Update interval</string>
+  <string name="choose_text_size">Widget text size</string>
   <string name="widget_width_updated_message">Widget size updated</string>
   <string name="text_color_updated_message">Text color updated</string>
     <string name="error_symbol">Invalid symbol</string>
@@ -67,16 +70,14 @@
   <string name="change_percent">% Change</string>
   <string name="change_amount">Change</string>
     <string name="day_change_amount">Day Change</string>
-  <string name="autosort_disabled">Auto-sort has been disabled. You can now drag and drop to sort.</string>
-    <string name="ok">OK</string>
+  <string name="ok">OK</string>
   <string name="cancel">Cancel</string>
   <string name="invalid_number">Invalid number</string>
     <string name="already_in_portfolio">%1$s is already in your portfolio</string>
   <string name="added_to_list">%1$s added to your portfolio</string>
   <string name="next_fetch">Next fetch: %1$s</string>
   <string name="last_fetch">Last fetch: %1$s</string>
-    <string name="total_holdings">Total Holdings: %1$s</string>
-    <string name="enter_a_symbol">Enter a symbol</string>
+  <string name="enter_a_symbol">Enter a symbol</string>
   <string name="no_symbols">¯\\_(ツ)_/¯\nNo symbols</string>
   <string name="error_fetching_news">¯\\_(ツ)_/¯\nError fetching news</string>
   <string name="widget_name">Widget name</string>
@@ -96,8 +97,7 @@
     <string name="widgets">Widgets</string>
     <string name="how_to_title">How to add a widget</string>
   <string name="how_to">- Long-press an empty space on your home screen to bring up the menu\n\n- Now select the \'Widgets\' option.\n\n- Select the \'Stocks Widget\' item from the list of widgets.\n\n- You can add multiple widgets each with their own portfolio.</string>
-  <string name="db_viewer">Application database</string>
-    <string name="notes">Notes</string>
+  <string name="notes">Notes</string>
   <string name="alerts">Alerts</string>
   <string name="alert_above">Alert Above</string>
   <string name="alert_below">Alert Below</string>
@@ -109,7 +109,8 @@
     <string name="desc_channel_alerts">Stock alerts</string>
   <string name="desc_channel_summary">Daily summary</string>
   <string name="notification_summary_title">How did your watch list do today?</string>
-
+  <string name="app_theme">App and widget theme</string>
+  <string name="text_size_updated_message">Text size updated</string>
     <string name="quote_details_open">Open</string>
   <string name="quote_details_day_range">Day\'s Range</string>
   <string name="quote_details_ftw_range">52 Week Range</string>

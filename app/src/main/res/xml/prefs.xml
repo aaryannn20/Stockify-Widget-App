@@ -1,0 +1,46 @@
+<androidx.preference.PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+  <ListPreference
+      app:defaultValue="0"
+      app:entries="@array/app_themes"
+      app:entryValues="@array/app_themes_values"
+      app:iconSpaceReserved="false"
+      app:key="com.starorigins.stockify.widgetapp.theme"
+      app:negativeButtonText="@null"
+      app:positiveButtonText="@null"
+      app:title="@string/app_theme"/>
+
+  <ListPreference
+      app:defaultValue="1"
+      app:entries="@array/font_sizes"
+      app:entryValues="@array/font_sizes_values"
+      app:iconSpaceReserved="false"
+      app:key="com.starorigins.stockify.widgetapp.textsize"
+      app:negativeButtonText="@null"
+      app:positiveButtonText="@null"
+      app:title="@string/choose_text_size"/>
+
+  <ListPreference
+      app:defaultValue="1"
+      app:entries="@array/sync_periods"
+      app:entryValues="@array/sync_periods_values"
+      app:iconSpaceReserved="false"
+      app:key="UPDATE_INTERVAL"
+      app:negativeButtonText="@null"
+      app:positiveButtonText="@null"
+      app:title="@string/update_interval"/>
+
+
+  <CheckBoxPreference
+      app:key="SETTING_NOTIFICATION_ALERTS"
+      app:selectable="true"
+      app:iconSpaceReserved="false"
+      app:summary="@string/notification_alerts"
+      app:title="@string/notification_alerts_desc"
+      />
+
+
+
+</androidx.preference.PreferenceScreen>

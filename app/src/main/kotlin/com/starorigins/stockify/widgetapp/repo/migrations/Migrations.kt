@@ -32,13 +32,8 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
           """.trimIndent()
     )
 
-    // Remove table QuoteRow version 1.
     database.execSQL("DROP TABLE `${TABLE_NAME}`")
-
-    // Rename table QuoteRow version 2 to be the new table QuoteRow.
     database.execSQL("ALTER TABLE `${TABLE_NAME_TEMP}` RENAME TO `${TABLE_NAME}`")
-
-    // Add the new table PropertiesRow.
     database.execSQL(
         "CREATE TABLE IF NOT EXISTS `PropertiesRow` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `properties_quote_symbol` TEXT NOT NULL, `notes` TEXT NOT NULL, `alert_above` REAL NOT NULL, `alert_below` REAL NOT NULL)"
     )

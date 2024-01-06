@@ -27,10 +27,10 @@
         android:gravity="center_vertical|start"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.StocksWidget.TitleMedium"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="GOOG" />
+        tools:text="GOOGLE" />
 
     <TextView
         android:id="@+id/name"
@@ -42,7 +42,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
-        android:textSize="16sp"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ticker"
         tools:text="Google Inc" />
@@ -55,7 +55,7 @@
         android:gravity="center_vertical|start"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.StocksWidget.TickerBold"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ticker"
@@ -72,7 +72,7 @@
         android:gravity="center_vertical|end"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.StocksWidget.BodyMedium"
-        android:textSize="16sp"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/totalValue"
         tools:text="5.02%" />

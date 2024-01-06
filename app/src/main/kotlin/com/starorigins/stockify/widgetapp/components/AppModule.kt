@@ -26,6 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
+import com.starorigins.stockify.widgetapp.AppPreferences
+import com.starorigins.stockify.widgetapp.analytics.AnalyticsImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -38,7 +40,7 @@ class AppModule {
   @Provides @Singleton fun provideDefaultSharedPreferences(
     @ApplicationContext context: Context
   ): SharedPreferences =
-    context.getSharedPreferences(com.starorigins.stockify.widgetapp.AppPreferences.PREFS_NAME, MODE_PRIVATE)
+    context.getSharedPreferences(AppPreferences.PREFS_NAME, MODE_PRIVATE)
 
   @Provides @Singleton fun provideAppWidgetManager(@ApplicationContext context: Context): AppWidgetManager =
     AppWidgetManager.getInstance(context)
@@ -49,7 +51,7 @@ class AppModule {
   @Provides @Singleton fun provideAnalytics(
     @ApplicationContext context: Context,
     properties: dagger.Lazy<GeneralProperties>
-  ): Analytics = com.starorigins.stockify.widgetapp.analytics.AnalyticsImpl(context, properties)
+  ): Analytics = AnalyticsImpl(context, properties)
 
   @Provides @Singleton fun provideQuotesDB(@ApplicationContext context: Context): QuotesDB {
     return Room.databaseBuilder(

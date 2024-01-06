@@ -107,7 +107,7 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ChildFragmen
     binding.stockList.addItemDecoration(
         SpacingDecoration(requireContext().resources.getDimensionPixelSize(R.dimen.list_spacing_double))
     )
-    val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 2)
+    val gridLayoutManager = androidx.recyclerview.widget.GridLayoutManager(context, 1)
     binding.stockList.layoutManager = gridLayoutManager
     binding.stockList.adapter = stocksAdapter
     val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(stocksAdapter)
@@ -155,9 +155,6 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ChildFragmen
   override fun onStartDrag(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
     parent.onDragStarted()
     val widgetData = viewModel.dataForWidgetId(widgetId)
-    if (widgetData.autoSortEnabled()) {
-      InAppMessage.showMessage(requireActivity(), R.string.autosort_disabled)
-    }
     itemTouchHelper?.startDrag(viewHolder)
   }
 
