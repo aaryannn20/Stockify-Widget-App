@@ -26,7 +26,7 @@
   <string name="layout_type">Widget type</string>
   <string name="widget_width">Widget size</string>
   <string name="text_color">Text color</string>
-    <string name="notification_alerts_required_message">The app requires the notifications permission to receive notification alerts.</string>
+    <string name="notification_alerts_required_message">The app requires the notifications permission to receive notifications.</string>
   <string name="auto_sort">Autosort</string>
   <string name="auto_sort_desc">Stocks will be sorted by percent change.</string>
   <string name="hide_header">Hide widget header</string>

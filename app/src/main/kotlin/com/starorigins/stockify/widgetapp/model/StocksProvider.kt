@@ -42,7 +42,6 @@ class StocksProvider @Inject constructor(
   companion object {
     private const val LAST_FETCHED = "LAST_FETCHED"
     private const val NEXT_FETCH = "NEXT_FETCH"
-    private val DEFAULT_STOCKS = arrayOf("^GSPC", "^DJI", "GOOG", "AAPL", "MSFT")
     const val DEFAULT_INTERVAL_MS: Long = 15_000L
   }
 
@@ -57,9 +56,6 @@ class StocksProvider @Inject constructor(
   init {
     val tickers = storage.readTickers()
     this.tickerSet.addAll(tickers)
-    if (this.tickerSet.isEmpty()) {
-      this.tickerSet.addAll(DEFAULT_STOCKS)
-    }
     _tickers.tryEmit(tickerSet.toList())
     val lastFetchedLoaded = preferences.getLong(LAST_FETCHED, 0L)
     lastFetched = lastFetchedLoaded
@@ -140,10 +136,6 @@ class StocksProvider @Inject constructor(
         }
       }
     }
-
-  /////////////////////
-  // public api
-  /////////////////////
 
   fun hasTicker(ticker: String): Boolean {
     return tickerSet.contains(ticker)

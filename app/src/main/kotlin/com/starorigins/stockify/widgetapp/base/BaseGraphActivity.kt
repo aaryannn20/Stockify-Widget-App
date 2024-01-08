@@ -115,7 +115,7 @@ abstract class BaseGraphActivity<T : ViewBinding> : BaseActivity<T>() {
   fun updateRange(v: View) {
     when (v.id) {
       R.id.one_day -> range = Range.ONE_DAY
-      R.id.two_weeks -> range = Range.TWO_WEEKS
+      R.id.two_weeks -> range = Range.ONE_WEEK
       R.id.one_month -> range = Range.ONE_MONTH
       R.id.three_month -> range = Range.THREE_MONTH
       R.id.one_year -> range = Range.ONE_YEAR

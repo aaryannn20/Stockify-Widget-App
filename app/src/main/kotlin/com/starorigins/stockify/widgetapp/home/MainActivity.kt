@@ -68,7 +68,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     binding.bottomNavigation.setOnItemReselectedListener { onNavigationItemReselected(it) }
 
     currentChild = if (savedInstanceState == null) {
-      val fragment = HomeFragment()
+      val fragment = SearchFragment()
       supportFragmentManager.beginTransaction()
           .add(R.id.fragment_container, fragment, fragment.javaClass.name)
           .commit()
@@ -77,10 +77,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
       supportFragmentManager.findFragmentById(R.id.fragment_container) as ChildFragment
     }
 
-    val tutorialShown = appPreferences.tutorialShown()
-    if (!tutorialShown) {
-      showTutorial()
-    }
     if (VERSION.SDK_INT >= 33) {
       requestPermissionLauncher = registerForActivityResult(RequestPermission()) { granted ->
         if (granted) {
@@ -99,17 +95,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     if (VERSION.SDK_INT >= 33 && appPreferences.notificationAlerts() && !hasNotificationPermission()) {
       requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
-    viewModel.showTutorial.observe(this) {
-      if (it == true) {
-        showTutorial()
-        viewModel.resetShowTutorial()
-      }
-    }
-    viewModel.showWhatsNew.observe(this) {
-      if (it == true) {
-        viewModel.resetShowWhatsNew()
-      }
-    }
+
     viewModel.openSearchWidgetId.observe(this) {
       it?.let {
         openSearch(it)
@@ -129,7 +115,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
   }
 
   private fun initCaches() {
-    // not sure why news provider is not getting initialised, so added this check
     if (::newsProvider.isInitialized) newsProvider.initCache()
     if (appPreferences.getLastSavedVersionCode() < BuildConfig.VERSION_CODE) {
     }
@@ -140,11 +125,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     var fragment = supportFragmentManager.findFragmentByTag(FRAGMENT_MAP[itemId])
     if (fragment == null) {
       fragment = when (itemId) {
+        R.id.action_search -> SearchFragment()
+        R.id.action_feed -> NewsFeedFragment()
         R.id.action_portfolio -> HomeFragment()
         R.id.action_widgets -> WidgetsFragment()
-        R.id.action_search -> SearchFragment()
         R.id.action_settings -> SettingsParentFragment()
-        R.id.action_feed -> NewsFeedFragment()
+
         else -> {
           throw IllegalStateException("Unknown bottom nav itemId: $itemId - ${item.title}")
         }
@@ -174,12 +160,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     val fragment = supportFragmentManager.findFragmentByTag(FRAGMENT_MAP[itemId])
     (fragment as? ChildFragment)?.scrollToTop()
   }
-
-  private fun showTutorial() {
-    showDialog(getString(R.string.how_to_title), getString(R.string.how_to))
-    appPreferences.setTutorialShown(true)
-  }
-
 
 
   private fun openSearch(widgetId: Int) {

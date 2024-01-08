@@ -54,7 +54,7 @@ class GraphActivity : BaseGraphActivity<ActivityGraphBinding>() {
     }
     val view = when (range) {
       Range.ONE_DAY -> binding.oneDay
-      Range.TWO_WEEKS -> binding.twoWeeks
+      Range.ONE_WEEK -> binding.oneWeeks
       Range.ONE_MONTH -> binding.oneMonth
       Range.THREE_MONTH -> binding.threeMonth
       Range.ONE_YEAR -> binding.oneYear

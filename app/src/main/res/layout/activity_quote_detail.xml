@@ -166,7 +166,7 @@
             android:text="@string/one_day_short"/>
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/two_weeks"
+            android:id="@+id/one_weeks"
             style="@style/Widget.Chip.Chart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

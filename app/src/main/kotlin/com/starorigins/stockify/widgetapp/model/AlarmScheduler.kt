@@ -37,7 +37,7 @@ class AlarmScheduler @Inject constructor(
         .dayOfWeek
     val startTimez = appPreferences.startTime()
     val endTimez = appPreferences.endTime()
-    // whether the start time is after the end time e.g. start time is 11pm and end time is 5am
+    // whether the start time is after the end time
     val inverse =
       startTimez.hour > endTimez.hour || (startTimez.hour == endTimez.hour && startTimez.minute > endTimez.minute)
     val now: ZonedDateTime = clock.todayZoned()

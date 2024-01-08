@@ -3,9 +3,9 @@ package com.starorigins.stockify.widgetapp.model
 import com.starorigins.stockify.widgetapp.model.HistoryProvider.Range.Companion.FIVE_YEARS
 import com.starorigins.stockify.widgetapp.model.HistoryProvider.Range.Companion.ONE_DAY
 import com.starorigins.stockify.widgetapp.model.HistoryProvider.Range.Companion.ONE_MONTH
+import com.starorigins.stockify.widgetapp.model.HistoryProvider.Range.Companion.ONE_WEEK
 import com.starorigins.stockify.widgetapp.model.HistoryProvider.Range.Companion.ONE_YEAR
 import com.starorigins.stockify.widgetapp.model.HistoryProvider.Range.Companion.THREE_MONTH
-import com.starorigins.stockify.widgetapp.model.HistoryProvider.Range.Companion.TWO_WEEKS
 import com.starorigins.stockify.widgetapp.network.ChartApi
 import com.starorigins.stockify.widgetapp.network.data.DataPoint
 import kotlinx.coroutines.Dispatchers
@@ -90,7 +90,7 @@ class HistoryProvider @Inject constructor(
   private fun Range.intervalParam(): String {
     return when(this) {
       ONE_DAY -> "1h"
-      TWO_WEEKS -> "1h"
+      ONE_WEEK -> "1h"
       else -> "1d"
     }
   }
@@ -98,7 +98,7 @@ class HistoryProvider @Inject constructor(
   private fun Range.rangeParam(): String {
     return when (this) {
       ONE_DAY -> "1d"
-      TWO_WEEKS -> "14d"
+      ONE_WEEK -> "7d"
       ONE_MONTH -> "1mo"
       THREE_MONTH -> "3mo"
       ONE_YEAR -> "1y"
@@ -112,7 +112,7 @@ class HistoryProvider @Inject constructor(
     class DateRange(duration: Duration) : Range(duration)
     companion object {
       val ONE_DAY = DateRange(Duration.ofDays(1))
-      val TWO_WEEKS = DateRange(Duration.ofDays(14))
+      val ONE_WEEK = DateRange(Duration.ofDays(7))
       val ONE_MONTH = DateRange(Duration.ofDays(30))
       val THREE_MONTH = DateRange(Duration.ofDays(90))
       val ONE_YEAR = DateRange(Duration.ofDays(365))
