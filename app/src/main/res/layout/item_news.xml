@@ -7,11 +7,11 @@
     android:layout_height="wrap_content"
 
     >
+
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:padding="@dimen/activity_horizontal_margin"
-      >
+      android:padding="@dimen/activity_horizontal_margin">
 
     <TextView
         android:id="@+id/news_source"
@@ -54,19 +54,19 @@
         tools:text="Stock market rises!" />
 
     <ImageView
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.2"
-        android:maxWidth="100dp"
-        android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1"
-        android:scaleType="centerCrop"
-        android:layout_marginTop="4dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        tools:src="@drawable/bg_header"
         android:id="@+id/thumbnail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:maxWidth="100dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/news_source"/>
+        app:layout_constraintTop_toBottomOf="@id/news_source"
+        app:layout_constraintWidth_percent="0.2"
+        tools:src="@drawable/bg_header"
+        tools:visibility="visible" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

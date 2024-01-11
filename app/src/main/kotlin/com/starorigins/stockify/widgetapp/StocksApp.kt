@@ -16,7 +16,7 @@ import javax.inject.Inject
 open class StocksApp : Application() {
 
   @Inject lateinit var analytics: Analytics
-  @Inject lateinit var appPreferences: com.starorigins.stockify.widgetapp.AppPreferences
+  @Inject lateinit var appPreferences: AppPreferences
   @Inject lateinit var notificationsHandler: NotificationsHandler
   @Inject lateinit var widgetDataProvider: WidgetDataProvider
 

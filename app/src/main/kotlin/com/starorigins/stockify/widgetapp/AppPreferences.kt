@@ -18,8 +18,7 @@ import kotlin.random.Random
 
 @Singleton
 class AppPreferences @Inject constructor(
-  internal val sharedPreferences: SharedPreferences,
-  private val clock: AppClock
+  internal val sharedPreferences: SharedPreferences
 ) {
 
   init {
@@ -111,19 +110,8 @@ class AppPreferences @Inject constructor(
     return sharedPreferences.getString(CRUMB, null)
   }
 
-  fun tutorialShown(): Boolean {
-    return sharedPreferences.getBoolean(TUTORIAL_SHOWN, false)
-  }
-
-  fun setTutorialShown(shown: Boolean) {
-    sharedPreferences.edit()
-        .putBoolean(TUTORIAL_SHOWN, shown)
-        .apply()
-  }
 
   fun shouldPromptRate(): Boolean = Random.nextInt() % 5 == 0
-
-  fun backOffAttemptCount(): Int = sharedPreferences.getInt(BACKOFF_ATTEMPTS, 1)
 
   fun setBackOffAttemptCount(count: Int) {
     sharedPreferences.edit()
@@ -133,11 +121,6 @@ class AppPreferences @Inject constructor(
 
   fun roundToTwoDecimalPlaces(): Boolean = sharedPreferences.getBoolean(SETTING_ROUND_TWO_DP, true)
 
-  fun setRoundToTwoDecimalPlaces(round: Boolean) {
-    sharedPreferences.edit()
-        .putBoolean(SETTING_ROUND_TWO_DP, round)
-        .apply()
-  }
 
   fun notificationAlerts(): Boolean = sharedPreferences.getBoolean(SETTING_NOTIFICATION_ALERTS, true)
 
@@ -202,8 +185,6 @@ class AppPreferences @Inject constructor(
     const val START_TIME = "START_TIME"
     const val END_TIME = "END_TIME"
     const val UPDATE_DAYS = "UPDATE_DAYS"
-    const val TUTORIAL_SHOWN = "TUTORIAL_SHOWN"
-    const val SETTING_AUTOSORT = "SETTING_AUTOSORT"
     const val SETTING_HIDE_HEADER = "SETTING_HIDE_HEADER"
     const val SETTING_ROUND_TWO_DP = "SETTING_ROUND_TWO_DP"
     const val SETTING_NOTIFICATION_ALERTS = "SETTING_NOTIFICATION_ALERTS"
@@ -216,6 +197,7 @@ class AppPreferences @Inject constructor(
     const val BOLD_CHANGE = "BOLD_CHANGE"
     const val SHOW_CURRENCY = "SHOW_CURRENCY"
     const val PERCENT = "PERCENT"
+    const val SETTING_AUTOSORT = "SETTING_AUTOSORT"
     const val CRUMB = "CRUMB"
     const val BACKOFF_ATTEMPTS = "BACKOFF_ATTEMPTS"
     const val APP_VERSION_CODE = "APP_VERSION_CODE"

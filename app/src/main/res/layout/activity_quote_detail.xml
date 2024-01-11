@@ -269,7 +269,112 @@
           android:id="@+id/positions_container"
           android:visibility="gone"
           tools:visibility="visible"
-          android:layout_margin="8dp"/>
+          android:layout_margin="8dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp"
+                >
+              <TextView
+                  android:id="@+id/numShares"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="2dp"
+                  android:gravity="center"
+                  tools:text="3"
+                  android:textColor="?attr/colorOnSurfaceVariant"
+                  style="@style/Widget.StocksWidget.TextView.TitleMedium"
+                  android:textAppearance="@style/TextAppearance.StocksWidget.TitleMedium"
+                  />
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/shares"
+                  android:textColor="?attr/colorOnSurface"
+                  />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp"
+                >
+              <com.robinhood.ticker.TickerView
+                  android:id="@+id/equityValue"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="2dp"
+                  android:gravity="center"
+                  tools:text="$2,400.00"
+                  android:textColor="?attr/colorOnSurfaceVariant"
+                  android:textAppearance="@style/TextAppearance.StocksWidget.TickerBold"
+                  />
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/equity_value"
+                  android:textColor="?attr/colorOnSurface"
+                  />
+
+            </LinearLayout>
+
+          </LinearLayout>
+
+          <com.starorigins.stockify.widgetapp.ui.StockFieldView
+              android:id="@+id/average_price"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="8dp"
+              android:layout_weight="1"
+              app:center_text="true"
+              app:name="@string/average_price"
+              app:or="horizontal"
+              app:size="@dimen/larger_text"
+              />
+
+          <com.starorigins.stockify.widgetapp.ui.StockFieldView
+              android:id="@+id/total_gain_loss"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="8dp"
+              android:layout_weight="1"
+              app:center_text="true"
+              app:name="@string/gain_loss"
+              app:or="horizontal"
+              app:size="@dimen/larger_text"
+              />
+
+          <com.starorigins.stockify.widgetapp.ui.StockFieldView
+              android:id="@+id/day_change"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="8dp"
+              android:layout_weight="1"
+              app:center_text="true"
+              app:name="@string/day_change_amount"
+              app:or="horizontal"
+              app:size="@dimen/larger_text"
+              />
+
+        </LinearLayout>
+      </com.google.android.material.card.MaterialCardView>
 
 
       <com.google.android.material.card.MaterialCardView

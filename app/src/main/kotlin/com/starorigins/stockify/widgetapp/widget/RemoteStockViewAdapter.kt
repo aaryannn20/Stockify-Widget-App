@@ -84,42 +84,6 @@ class RemoteStockViewAdapter(private val widgetId: Int) : RemoteViewsService.Rem
         stock.holdingsString()
       })
 
-      if (widgetData.isBoldEnabled()) {
-        changePercentString.setSpan(
-            StyleSpan(Typeface.BOLD), 0, changePercentString.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        changeValueString.setSpan(
-            StyleSpan(Typeface.BOLD), 0, changeValueString.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        gainLossString.setSpan(
-            StyleSpan(Typeface.BOLD), 0, gainLossString.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        gainLossPercentString.setSpan(
-                StyleSpan(Typeface.BOLD), 0, gainLossPercentString.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-      } else {
-        changePercentString.setSpan(
-            StyleSpan(Typeface.NORMAL), 0, changePercentString.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        changeValueString.setSpan(
-            StyleSpan(Typeface.NORMAL), 0, changeValueString.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        gainLossString.setSpan(
-                StyleSpan(Typeface.NORMAL), 0, gainLossString.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        gainLossPercentString.setSpan(
-                StyleSpan(Typeface.NORMAL), 0, gainLossPercentString.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-      }
-
       if (stockViewLayout == R.layout.stockview3) {
         val changeType = widgetData.changeType()
         if (changeType === ChangeType.Percent) {

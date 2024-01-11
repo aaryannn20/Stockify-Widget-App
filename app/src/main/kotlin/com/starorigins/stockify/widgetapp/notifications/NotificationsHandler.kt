@@ -129,7 +129,7 @@ class NotificationsHandler @Inject constructor(
       }
       with("Summary") {
         val name = this
-        val descriptionText = context.getString(R.string.desc_channel_summary)
+        val descriptionText = context.getString(R.string.notification_summary)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel(
             CHANNEL_ID_SUMMARY, name, importance
@@ -318,9 +318,7 @@ private class NotificationFactory(
     val intent = Intent(context, MainActivity::class.java)
     val pendingIntent: PendingIntent? = TaskStackBuilder.create(context)
         .run {
-          // Add the intent, which inflates the back stack
           addNextIntentWithParentStack(intent)
-          // Get the PendingIntent containing the entire back stack
           getPendingIntent(notificationId, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
     val icon = when {
@@ -359,9 +357,7 @@ private class NotificationFactory(
     }
     val pendingIntent: PendingIntent? = TaskStackBuilder.create(context)
         .run {
-          // Add the intent, which inflates the back stack
           addNextIntent(intent)
-          // Get the PendingIntent containing the entire back stack
           if (VERSION.SDK_INT >= VERSION_CODES.S) {
             getPendingIntent(notificationId, PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
           } else {

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!-- TextView styles -->
-  <!-- Adding these custom textview styles because text appearance doesn't override the font :(  -->
-
     <style name="Widget.StocksWidget.TextView.TitleLarge" parent="Widget.StocksWidget.TextView">
     <item name="android:textAppearance">@style/TextAppearance.StocksWidget.TitleLarge</item>
     <item name="fontFamily">@font/ubuntu_bold</item>

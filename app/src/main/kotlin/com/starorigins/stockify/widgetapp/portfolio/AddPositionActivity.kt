@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import com.starorigins.stockify.widgetapp.AppPreferences
 import com.starorigins.stockify.widgetapp.base.BaseActivity
 import com.starorigins.stockify.widgetapp.components.InAppMessage
 import com.starorigins.stockify.widgetapp.dismissKeyboard
@@ -115,9 +116,9 @@ class AddPositionActivity : BaseActivity<ActivityPositionsBinding>() {
         val positionNumShares = positionBinding.positionShares
         val positionPrice = positionBinding.positionPrice
         val positionTotalValue = positionBinding.positionTotalValue
-        positionNumShares.text = com.starorigins.stockify.widgetapp.AppPreferences.DECIMAL_FORMAT.format(holding.shares)
-        positionPrice.text = com.starorigins.stockify.widgetapp.AppPreferences.DECIMAL_FORMAT.format(holding.price)
-        positionTotalValue.text = com.starorigins.stockify.widgetapp.AppPreferences.DECIMAL_FORMAT.format(holding.totalValue())
+        positionNumShares.text = AppPreferences.DECIMAL_FORMAT.format(holding.shares)
+        positionPrice.text = AppPreferences.DECIMAL_FORMAT.format(holding.price)
+        positionTotalValue.text = AppPreferences.DECIMAL_FORMAT.format(holding.totalValue())
         binding.positionsHolder.addView(positionBinding.root)
         positionBinding.root.tag = holding
         // Remove entry when right side 'x' icon is clicked.

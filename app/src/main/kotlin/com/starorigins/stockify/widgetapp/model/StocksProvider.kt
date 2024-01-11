@@ -143,9 +143,9 @@ class StocksProvider @Inject constructor(
 
   suspend fun fetch(allowScheduling: Boolean = true): FetchResult<List<Quote>> = withContext(Dispatchers.IO) {
     if (tickerSet.isEmpty()) {
-      if (allowScheduling) {
-        _fetchState.emit(FetchState.Failure(FetchException("No symbols in portfolio")))
-      }
+//      if (allowScheduling) {
+//        _fetchState.emit(FetchState.Failure(FetchException("No symbols in portfolio")))
+//      }
       FetchResult.failure<List<Quote>>(FetchException("No symbols in portfolio"))
     } else {
       return@withContext try {

@@ -18,8 +18,8 @@
       android:id="@+id/list"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:numColumns="3"
+      android:numColumns="1"
       android:horizontalSpacing="4dp"
-      android:scrollbars="none"
+      android:scrollbars="vertical"
       />
 </LinearLayout>

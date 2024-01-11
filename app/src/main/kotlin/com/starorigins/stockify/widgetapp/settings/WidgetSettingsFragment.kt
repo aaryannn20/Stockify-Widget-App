@@ -81,9 +81,7 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
     setWidgetNameSetting(widgetData)
     setLayoutTypeSetting(widgetData)
     setWidgetSizeSetting(widgetData)
-    setBoldSetting(widgetData)
     setAutoSortSetting(widgetData)
-    setHideHeaderSetting(widgetData)
     setCurrencySetting(widgetData)
     setBgSetting(widgetData)
     setTextColorSetting(widgetData)
@@ -95,7 +93,9 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
         binding.settingAddStock, binding.settingWidgetName, binding.settingLayoutType , binding.settingWidgetWidth,
         binding.settingBold, binding.settingAutosort, binding.settingHideHeader, binding.settingCurrency, binding.settingBackground, binding.settingTextColor
     ).forEach {
-      it.setOnClickListener(this@WidgetSettingsFragment)
+      if (it != null) {
+        it.setOnClickListener(this@WidgetSettingsFragment)
+      }
     }
 
     lifecycleScope.launch {
@@ -178,24 +178,13 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
         }
       }
 
-      R.id.setting_bold -> {
-        val isChecked = !binding.settingBoldCheckbox!!.isChecked
-        widgetData.setBoldEnabled(isChecked)
-        setBoldSetting(widgetData)
-        broadcastUpdateWidget()
-      }
       R.id.setting_autosort -> {
         val isChecked = !binding.settingAutosortCheckbox!!.isChecked
         widgetData.setAutoSort(isChecked)
         setAutoSortSetting(widgetData)
         broadcastUpdateWidget()
       }
-      R.id.setting_hide_header -> {
-        val isChecked = !binding.settingHideHeaderCheckbox!!.isChecked
-        widgetData.setHideHeader(isChecked)
-        setHideHeaderSetting(widgetData)
-        broadcastUpdateWidget()
-      }
+
       R.id.setting_currency -> {
         val isChecked = !binding.settingCurrencyCheckbox!!.isChecked
         widgetData.setCurrencyEnabled(isChecked)
@@ -233,16 +222,10 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
     binding.settingLayoutType.setSubtitle(layoutTypeDesc)
   }
 
-  private fun setBoldSetting(widgetData: WidgetData) {
-    binding.settingBoldCheckbox!!.isChecked = widgetData.isBoldEnabled()
-  }
+
 
   private fun setAutoSortSetting(widgetData: WidgetData) {
     binding.settingAutosortCheckbox!!.isChecked = widgetData.autoSortEnabled()
-  }
-
-  private fun setHideHeaderSetting(widgetData: WidgetData) {
-    binding.settingHideHeaderCheckbox!!.isChecked = widgetData.hideHeader()
   }
 
   private fun setCurrencySetting(widgetData: WidgetData) {
@@ -273,7 +256,6 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
     val nextUpdate = time.createTimeString()
     val nextUpdateText: String = getString(R.string.next_fetch, nextUpdate)
     binding.widgetLayout.root.findViewById<TextView>(R.id.next_update).text = nextUpdateText
-    binding.widgetLayout.root.findViewById<View>(R.id.widget_header).isVisible = !widgetData.hideHeader()
     adapter.refresh(widgetData)
   }
 

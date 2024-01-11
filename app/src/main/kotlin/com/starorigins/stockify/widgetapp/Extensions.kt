@@ -178,11 +178,11 @@ fun ZonedDateTime.createTimeString(): String {
   val fetchedDayOfWeek = dayOfWeek.value
   val today = AppClockImpl.todayZoned().dayOfWeek.value
   fetched = if (today == fetchedDayOfWeek) {
-    com.starorigins.stockify.widgetapp.AppPreferences.TIME_FORMATTER.format(this)
+    AppPreferences.TIME_FORMATTER.format(this)
   } else {
     val day: String = DayOfWeek.from(this)
         .getDisplayName(SHORT, Locale.getDefault())
-    val timeStr: String = com.starorigins.stockify.widgetapp.AppPreferences.TIME_FORMATTER.format(this)
+    val timeStr: String = AppPreferences.TIME_FORMATTER.format(this)
     "$timeStr $day"
   }
   return fetched

@@ -112,12 +112,13 @@ class StockWidget : AppWidgetProvider() {
     min_width: Int,
     appWidgetId: Int
   ): RemoteViews = when {
-      widgetDataProvider.dataForWidgetId(appWidgetId).widgetSizePref() == 1 -> RemoteViews(context.packageName, R.layout.widget_1x1)
+      widgetDataProvider.dataForWidgetId(appWidgetId).widgetSizePref() == 1 -> RemoteViews(context.packageName, R.layout.widget_3x1)
       min_width > 850 -> RemoteViews(context.packageName, R.layout.widget_5x1)
       min_width > 750 -> RemoteViews(context.packageName, R.layout.widget_4x1)
       min_width > 500 -> RemoteViews(context.packageName, R.layout.widget_3x1)
       min_width > 250 -> RemoteViews(context.packageName, R.layout.widget_2x1)
-      else -> RemoteViews(context.packageName, R.layout.widget_1x1)
+      else ->
+        RemoteViews(context.packageName, R.layout.widget_3x1)
     }
 
   private fun getMinWidgetWidth(options: Bundle?): Int {
@@ -168,13 +169,6 @@ class StockWidget : AppWidgetProvider() {
     } else {
       remoteViews.setViewVisibility(R.id.refresh_progress, View.GONE)
       remoteViews.setViewVisibility(R.id.refresh_icon, View.VISIBLE)
-    }
-    // Show/hide header
-    val hideHeader = widgetData.hideHeader()
-    if (hideHeader) {
-      remoteViews.setViewVisibility(R.id.widget_header, View.GONE)
-    } else {
-      remoteViews.setViewVisibility(R.id.widget_header, View.VISIBLE)
     }
     val updateReceiverIntent = Intent(context, RefreshReceiver::class.java)
     updateReceiverIntent.action = com.starorigins.stockify.widgetapp.AppPreferences.UPDATE_FILTER

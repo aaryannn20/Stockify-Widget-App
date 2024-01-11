@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(), ChildFragment, PortfolioFragment.Parent {
-	override val binding: (FragmentHomeBinding) by viewBinding(FragmentHomeBinding::inflate)
+  override val binding: (FragmentHomeBinding) by viewBinding(FragmentHomeBinding::inflate)
   companion object {
     private const val MAX_FETCH_COUNT = 3
   }
@@ -38,10 +38,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), ChildFragment, Portfol
   private lateinit var adapter: HomePagerAdapter
   private val viewModel: HomeViewModel by viewModels()
 
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-      }
+  }
 
   @SuppressLint("RestrictedApi")
   override fun onViewCreated(
@@ -65,6 +64,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), ChildFragment, Portfol
     viewModel.fetchState.observe(viewLifecycleOwner) {
       updateHeader()
     }
+    binding.toolbar.setOnMenuItemClickListener {
+      showTotalHoldingsPopup()
+      true
+    }
+    binding.toolbar.menu.findItem(R.id.total_holdings).apply {
+      isVisible = viewModel.hasHoldings
+      isEnabled = viewModel.hasHoldings
+    }
   }
 
   override fun onDestroyView() {
@@ -80,13 +87,32 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), ChildFragment, Portfol
   private fun updateHeader() {
     binding.tabs.visibility = if (widgetDataProvider.hasWidget()) View.VISIBLE else View.INVISIBLE
     adapter.setData(widgetDataProvider.widgetDataList())
+    binding.toolbar.menu.findItem(R.id.total_holdings).apply {
+      isVisible = viewModel.hasHoldings
+      isEnabled = viewModel.hasHoldings
+    }
   }
 
+  private fun showTotalHoldingsPopup() {
+    val popupWindow = PopupWindow(requireContext(), null)
+    val popupView = LayoutInflater.from(requireContext()).inflate(R.layout.layout_holdings_popup, null)
+    popupWindow.contentView = popupView
+    popupWindow.isOutsideTouchable = true
+    popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.card_bg))
+    viewModel.getTotalGainLoss().observe(viewLifecycleOwner) {
+      val totalHoldingsText = getString(R.string.total_holdings, it.holdings)
+      popupView.findViewById<TextView>(R.id.totalHoldings).text = totalHoldingsText
+      popupView.findViewById<TextView>(R.id.totalGain).text = it.gain
+      popupView.findViewById<TextView>(R.id.totalLoss).text = it.loss
+      popupWindow.showAtLocation(binding.toolbar, Gravity.TOP, binding.toolbar.width / 2, binding.toolbar.height)
+    }
+  }
 
   private fun fetch() {
     if (!attemptingFetch) {
       if (requireActivity().isNetworkOnline()) {
         fetchCount++
+        // Don't attempt to make many requests in a row if the stocks don't fetch.
         if (fetchCount <= MAX_FETCH_COUNT) {
           attemptingFetch = true
           viewModel.fetch().observe(viewLifecycleOwner) { success ->
@@ -114,8 +140,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), ChildFragment, Portfol
     updateHeader()
     fetchCount = 0
   }
-
-
 
   // PortfolioFragment.Parent
 

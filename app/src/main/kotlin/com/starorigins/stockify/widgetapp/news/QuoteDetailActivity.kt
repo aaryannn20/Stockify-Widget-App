@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog.Builder
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -41,6 +42,7 @@ import com.starorigins.stockify.widgetapp.databinding.ActivityQuoteDetailBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.elevation.SurfaceColors
 import com.robinhood.ticker.TickerUtils
+import com.starorigins.stockify.widgetapp.portfolio.AddPositionActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.abs
 
@@ -69,7 +71,7 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
   override var range: Range = Range.ONE_MONTH
 
   override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    super.onCreate(savedInstanceState)
     ticker = checkNotNull(intent.getStringExtra(TICKER))
     binding.toolbar.setNavigationOnClickListener {
       finish()
@@ -95,11 +97,11 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     adapter = TrendingAdapter(this)
     binding.recyclerView.layoutManager = LinearLayoutManager(this)
     binding.recyclerView.addItemDecoration(
-        SpacingDecoration(resources.getDimensionPixelSize(R.dimen.list_spacing_double))
+      SpacingDecoration(resources.getDimensionPixelSize(R.dimen.list_spacing_double))
     )
     binding.recyclerView.adapter = adapter
     binding.recyclerView.isNestedScrollingEnabled = false
-//    binding.equityValue.setCharacterLists(TickerUtils.provideNumberList())
+    binding.equityValue!!.setCharacterLists(TickerUtils.provideNumberList())
     binding.price.setCharacterLists(TickerUtils.provideNumberList())
     binding.change.setCharacterLists(TickerUtils.provideNumberList())
     binding.changePercent.setCharacterLists(TickerUtils.provideNumberList())
@@ -137,8 +139,8 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     }
     viewModel.newsData.observe(this) { data ->
       analytics.trackGeneralEvent(
-          GeneralEvent("FetchNews")
-              .addProperty("Success", "True")
+        GeneralEvent("FetchNews")
+          .addProperty("Success", "True")
       )
       setUpArticles(data)
     }
@@ -146,8 +148,8 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
       binding.newsContainer!!.displayedChild = INDEX_ERROR
       InAppMessage.showMessage(binding.parentView, R.string.news_fetch_failed, error = true)
       analytics.trackGeneralEvent(
-          GeneralEvent("FetchNews")
-              .addProperty("Success", "False")
+        GeneralEvent("FetchNews")
+          .addProperty("Success", "False")
       )
     }
     viewModel.fetchQuote(ticker)
@@ -164,7 +166,7 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
       Range.FIVE_YEARS -> binding.fiveYears
       else -> throw UnsupportedOperationException("Range not supported")
     }
-    binding.groupPeriod.check(view!!.id)
+    binding.groupPeriod.check(view.id)
   }
 
   private val offsetChangedListener = AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -182,23 +184,12 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     binding.price.text = quote.priceFormat.format(quote.lastTradePrice)
     binding.change.formatChange(quote.change)
     binding.changePercent.formatChangePercent(quote.changeInPercent)
+    updatePositionsNotesAlertsUi()
 
-
-    quoteSummary?.let {
-      binding.description?.isVisible ?: true
-      binding.description?.text ?: it.assetProfile?.longBusinessSummary ?: ""
-      it.assetProfile?.website?.let { website ->
-        binding.website?.isVisible ?:  true
-        binding.website?.text ?: website
-        binding.website?.paintFlags ?: binding.website!!.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        binding.website?.setOnClickListener {
-          CustomTabs.openTab(this, website)
-        }
-      }
-    } ?: run {
-      binding.description?.isVisible ?:  false
-      binding.website?.isVisible ?:   false
+    binding.positionsHeader.setOnClickListener {
+      positionOnClickListener()
     }
+
   }
 
   private fun updateToolbar() {
@@ -221,28 +212,30 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
             val widgetDatas = viewModel.getWidgetDatas()
             if (widgetDatas.size > 1) {
               val widgetNames = widgetDatas.map { it.widgetName() }
-                  .toTypedArray()
+                .toTypedArray()
               Builder(this)
-                  .setTitle(R.string.select_widget)
-                  .setItems(widgetNames) { dialog, which ->
-                    val id = widgetDatas[which].widgetId
-                    addTickerToWidget(ticker, id)
-                    dialog.dismiss()
-                  }
-                  .create()
-                  .show()
+                .setTitle(R.string.select_widget)
+                .setItems(widgetNames) { dialog, which ->
+                  val id = widgetDatas[which].widgetId
+                  addTickerToWidget(ticker, id)
+                  dialog.dismiss()
+                }
+                .create()
+                .show()
             } else {
               addTickerToWidget(ticker, widgetDatas.first().widgetId)
             }
           } else {
             addTickerToWidget(ticker, WidgetDataProvider.INVALID_WIDGET_ID)
           }
+          updatePositionsNotesAlertsUi()
           return@setOnMenuItemClickListener true
         }
         R.id.action_remove -> {
           removeMenuItem.isVisible = false
           addMenuItem.isVisible = true
           viewModel.removeStock(ticker)
+          updatePositionsNotesAlertsUi()
           return@setOnMenuItemClickListener true
         }
       }
@@ -250,6 +243,14 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     }
   }
 
+  private fun positionOnClickListener() {
+    analytics.trackClickEvent(
+      ClickEvent("EditPositionClick")
+    )
+    val intent = Intent(this, AddPositionActivity::class.java)
+    intent.putExtra(AddPositionActivity.TICKER, quote.symbol)
+    startActivityForResult(intent, REQ_EDIT_POSITIONS)
+  }
 
 
 
@@ -300,9 +301,51 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
   override fun onResume() {
     super.onResume()
     if (this::quote.isInitialized) {
+      updatePositionsNotesAlertsUi()
     }
   }
 
+  @SuppressLint("SetTextI18n")
+  private fun updatePositionsNotesAlertsUi() {
+    if (!this::quote.isInitialized) {
+      return
+    }
+    val isInPortfolio = viewModel.isInPortfolio(ticker)
+    if (isInPortfolio) {
+      binding.positionsContainer.visibility = View.VISIBLE
+      binding.positionsHeader.visibility = View.VISIBLE
+      binding.numShares!!.text = quote.numSharesString()
+      binding.equityValue!!.text = quote.priceFormat.format(quote.holdings())
+
+
+
+      if (quote.hasPositions()) {
+        binding.totalGainLoss!!.visibility = View.VISIBLE
+        binding.totalGainLoss!!.setText("${quote.gainLossString()} (${quote.gainLossPercentString()})")
+        if (quote.gainLoss() >= 0) {
+          binding.totalGainLoss!!.setTextColor(ContextCompat.getColor(this, R.color.positive_green))
+        } else {
+          binding.totalGainLoss!!.setTextColor(ContextCompat.getColor(this, R.color.negative_red))
+        }
+        binding.averagePrice!!.visibility = View.VISIBLE
+        binding.averagePrice!!.setText(quote.averagePositionPrice())
+        binding.dayChange!!.visibility = View.VISIBLE
+        binding.dayChange!!.setText(quote.dayChangeString())
+        if (quote.change > 0 || quote.changeInPercent >= 0) {
+          binding.dayChange!!.setTextColor(ContextCompat.getColor(this, R.color.positive_green))
+        } else {
+          binding.dayChange!!.setTextColor(ContextCompat.getColor(this, R.color.negative_red))
+        }
+      } else {
+        binding.totalGainLoss!!.visibility = View.GONE
+        binding.dayChange!!.visibility = View.GONE
+        binding.averagePrice!!.visibility = View.GONE
+      }
+    } else {
+      binding.positionsHeader.visibility = View.GONE
+      binding.positionsContainer.visibility = View.GONE
+    }
+  }
 
   private fun fetchNewsAndChartData() {
     if (!isNetworkOnline()) {
@@ -339,12 +382,10 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     analytics.trackGeneralEvent(GeneralEvent("NoGraphData"))
   }
 
-  /**
-   * Called via xml
-   */
+// Called by xml
   fun openGraph(v: View) {
     analytics.trackClickEvent(
-        ClickEvent("GraphClick")
+      ClickEvent("GraphClick")
     )
     val intent = Intent(this, GraphActivity::class.java)
     intent.putExtra(GraphActivity.TICKER, ticker)

@@ -89,17 +89,21 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
         insets
       }
     }
+
     trendingAdapter = TrendingStocksAdapter { quote ->
       analytics.trackClickEvent(ClickEvent("InstrumentClick"))
       val intent = Intent(requireContext(), QuoteDetailActivity::class.java)
       intent.putExtra(QuoteDetailActivity.TICKER, quote.symbol)
       startActivity(intent)
     }
+
     binding.trendingRecyclerView?.layoutManager = GridLayoutManager(activity, 1)
     binding.trendingRecyclerView?.addItemDecoration(
       SpacingDecoration(requireContext().resources.getDimensionPixelSize(dimen.list_spacing_double))
     )
+
     binding.trendingRecyclerView?.adapter = trendingAdapter
+
 
     suggestionsAdapter = SuggestionsAdapter(this)
     binding.searchResultsRecyclerView?.layoutManager = LinearLayoutManager(activity)
@@ -132,6 +136,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
       }
     }
   }
+
+
+
 
   override fun onSaveInstanceState(outState: Bundle) {
     outState.putInt(ARG_WIDGET_ID, selectedWidgetId)

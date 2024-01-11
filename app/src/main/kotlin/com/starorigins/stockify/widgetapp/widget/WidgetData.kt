@@ -124,7 +124,7 @@ class WidgetData {
   fun widgetName(): String {
     var name = preferences.getString(WIDGET_NAME, "")!!
     if (name.isEmpty()) {
-      name = "Widget #$position"
+      name = "Watchlist #$position"
       setWidgetName(name)
     }
     return name
@@ -241,23 +241,8 @@ class WidgetData {
     _autoSortEnabled.value = autoSort
   }
 
-  fun hideHeader(): Boolean = preferences.getBoolean(HIDE_HEADER, false)
 
-  fun setHideHeader(hide: Boolean) {
-    preferences.edit()
-        .putBoolean(HIDE_HEADER, hide)
-        .apply()
-  }
-
-  fun isBoldEnabled(): Boolean = preferences.getBoolean(BOLD_CHANGE, false)
-
-  fun setBoldEnabled(value: Boolean) {
-    preferences.edit()
-        .putBoolean(BOLD_CHANGE, value)
-        .apply()
-  }
-
-  fun isCurrencyEnabled(): Boolean = preferences.getBoolean(SHOW_CURRENCY, false)
+  fun isCurrencyEnabled(): Boolean = preferences.getBoolean(SHOW_CURRENCY, true)
 
   fun setCurrencyEnabled(value: Boolean) {
     preferences.edit()
