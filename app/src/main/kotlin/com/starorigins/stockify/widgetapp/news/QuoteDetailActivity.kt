@@ -382,7 +382,7 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     analytics.trackGeneralEvent(GeneralEvent("NoGraphData"))
   }
 
-// Called by xml
+  // Called by xml
   fun openGraph(v: View) {
     analytics.trackClickEvent(
       ClickEvent("GraphClick")

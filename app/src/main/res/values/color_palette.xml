@@ -11,6 +11,9 @@
   <color name="toolbar_scrim">@color/transparent</color>
   <color name="ic_launcher_background">#2A2A2A</color>
 
+  <color name="bg_main">#F4F5FA</color>
+  <color name="viewsDash">#EDF1F9</color>
+  <color name="dash_bg">#111D30</color>
   <color name="black">#000000</color>
   <color name="white">#ffffff</color>
   <color name="white_65">#A6FFFFFF</color>

@@ -5,27 +5,30 @@ import android.os.Build.VERSION
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
+import com.google.android.material.elevation.SurfaceColors
+import com.starorigins.stockify.widgetapp.BuildConfig
+import com.starorigins.stockify.widgetapp.R
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
 import com.starorigins.stockify.widgetapp.base.BaseActivity
 import com.starorigins.stockify.widgetapp.components.InAppMessage
+import com.starorigins.stockify.widgetapp.databinding.ActivityMainBinding
 import com.starorigins.stockify.widgetapp.hasNotificationPermission
 import com.starorigins.stockify.widgetapp.network.NewsProvider
 import com.starorigins.stockify.widgetapp.news.NewsFeedFragment
 import com.starorigins.stockify.widgetapp.notifications.NotificationsHandler
 import com.starorigins.stockify.widgetapp.portfolio.search.SearchFragment
 import com.starorigins.stockify.widgetapp.settings.SettingsParentFragment
-import com.starorigins.stockify.widgetapp.showDialog
 import com.starorigins.stockify.widgetapp.viewBinding
 import com.starorigins.stockify.widgetapp.widget.WidgetDataProvider
 import com.starorigins.stockify.widgetapp.widget.WidgetsFragment
-import com.starorigins.stockify.widgetapp.BuildConfig
-import com.starorigins.stockify.widgetapp.R
-import com.starorigins.stockify.widgetapp.databinding.ActivityMainBinding
-import com.google.android.material.elevation.SurfaceColors
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -54,6 +57,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
   override val binding: ActivityMainBinding by viewBinding(ActivityMainBinding::inflate)
   private val viewModel: MainViewModel by viewModels()
   private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+  lateinit var mAdView : AdView
 
   override fun onCreate(savedInstanceState: Bundle?) {
     installSplashScreen()
@@ -76,6 +80,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     } else {
       supportFragmentManager.findFragmentById(R.id.fragment_container) as ChildFragment
     }
+
+    MobileAds.initialize(this) {}
+    mAdView = findViewById(R.id.adView)
+    val adRequest = AdRequest.Builder().build()
+    mAdView.loadAd(adRequest)
 
     if (VERSION.SDK_INT >= 33) {
       requestPermissionLauncher = registerForActivityResult(RequestPermission()) { granted ->

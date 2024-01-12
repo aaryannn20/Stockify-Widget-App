@@ -44,8 +44,9 @@
           android:layout_marginLeft="16dp"
           android:layout_marginTop="20dp"
           android:layout_marginRight="16dp"
-          android:gravity="center"
-          tools:text="GOOG"
+          android:gravity="left"
+          tools:text="GOOGLE"
+          android:textSize="30sp"
           />
 
       <LinearLayout
@@ -60,6 +61,7 @@
 
         <TextView
             android:layout_width="0dp"
+            android:textSize="19sp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.4"
@@ -73,19 +75,19 @@
             android:layout_gravity="center_vertical|end"
             android:layout_weight="0.6"
             >
+
           <com.google.android.material.textfield.TextInputEditText
               android:id="@+id/shares"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:digits="0123456789.,"
               android:gravity="end"
               android:inputType="numberDecimal"
-              android:digits="0123456789.,"
               android:maxLength="9"
               android:maxLines="1"
               android:nextFocusDown="@+id/price"
               android:nextFocusForward="@+id/price"
-              android:textAlignment="textEnd"
-              />
+              android:textAlignment="textEnd" />
         </com.google.android.material.textfield.TextInputLayout>
 
       </LinearLayout>
@@ -102,6 +104,7 @@
 
         <TextView
             android:layout_width="0dp"
+            android:textSize="19sp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.4"
@@ -133,8 +136,8 @@
       <Button
           style="@style/ButtonStyle"
           android:id="@+id/addButton"
-          android:layout_width="match_parent"
-          android:layout_height="45dp"
+          android:layout_width="200dp"
+          android:layout_height="50dp"
           android:layout_gravity="center_horizontal"
           android:layout_marginStart="16dp"
           android:layout_marginLeft="16dp"
@@ -143,6 +146,7 @@
           android:layout_marginRight="16dp"
           android:layout_marginBottom="20dp"
           android:text="@string/add"
+          android:textSize="20sp"
           />
 
       <TextView
@@ -158,7 +162,7 @@
           android:layout_marginRight="16dp"
           android:layout_marginBottom="8dp"
           android:text="@string/current_positions"
-          android:textSize="@dimen/thin_title_text"
+          android:textSize="19sp"
           />
 
 
@@ -186,7 +190,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/shares"
-                android:textSize="@dimen/thin_title_text"
+                android:textSize="18sp"
                 />
 
             <TextView
@@ -196,7 +200,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/price"
-                android:textSize="@dimen/thin_title_text"
+                android:textSize="18sp"
                 />
 
             <TextView
@@ -206,7 +210,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/value"
-                android:textSize="@dimen/thin_title_text"
+                android:textSize="18sp"
                 />
 
             <View

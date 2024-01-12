@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 open class StocksApp : Application() {
-
   @Inject lateinit var analytics: Analytics
   @Inject lateinit var appPreferences: AppPreferences
   @Inject lateinit var notificationsHandler: NotificationsHandler
