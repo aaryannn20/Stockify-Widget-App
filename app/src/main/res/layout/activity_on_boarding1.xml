@@ -76,7 +76,7 @@
             android:layout_marginTop="70dp"
             android:fontFamily="@font/titillium_web_bold"
             android:gravity="center"
-            android:text="Welcome to\nStockSense."
+            android:text="Welcome to\nStockify"
             android:textSize="36dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

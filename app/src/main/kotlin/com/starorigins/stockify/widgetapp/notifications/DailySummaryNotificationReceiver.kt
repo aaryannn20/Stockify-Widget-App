@@ -3,15 +3,17 @@ package com.starorigins.stockify.widgetapp.notifications
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.starorigins.stockify.widgetapp.AppPreferences
 import com.starorigins.stockify.widgetapp.components.AppClock
 import com.starorigins.stockify.widgetapp.components.Injector
 import timber.log.Timber
 import javax.inject.Inject
 
+
 class DailySummaryNotificationReceiver: BroadcastReceiver() {
 
   @Inject lateinit var notificationsHandler: NotificationsHandler
-  @Inject lateinit var appPreferences: com.starorigins.stockify.widgetapp.AppPreferences
+  @Inject lateinit var appPreferences: AppPreferences
   @Inject lateinit var clock: AppClock
 
   override fun onReceive(context: Context, intent: Intent?) {

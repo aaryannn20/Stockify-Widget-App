@@ -10,6 +10,8 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.starorigins.stockify.widgetapp.base.BaseFragment
 import com.starorigins.stockify.widgetapp.components.InAppMessage
 import com.starorigins.stockify.widgetapp.isNetworkOnline
@@ -22,6 +24,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.internal.ViewUtils
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint

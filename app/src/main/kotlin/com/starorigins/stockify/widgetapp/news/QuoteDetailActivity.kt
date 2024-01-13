@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.viewModels
@@ -13,7 +14,6 @@ import androidx.appcompat.app.AlertDialog.Builder
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +42,7 @@ import com.starorigins.stockify.widgetapp.databinding.ActivityQuoteDetailBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.elevation.SurfaceColors
 import com.robinhood.ticker.TickerUtils
+import com.starorigins.stockify.widgetapp.portfolio.AddAlertsActivity
 import com.starorigins.stockify.widgetapp.portfolio.AddPositionActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.abs
@@ -166,7 +167,9 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
       Range.FIVE_YEARS -> binding.fiveYears
       else -> throw UnsupportedOperationException("Range not supported")
     }
-    binding.groupPeriod.check(view.id)
+    if (view != null) {
+      binding.groupPeriod.check(view.id)
+    }
   }
 
   private val offsetChangedListener = AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -188,6 +191,13 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
 
     binding.positionsHeader.setOnClickListener {
       positionOnClickListener()
+    }
+
+    binding.alertHeader.setOnClickListener {
+      alertsOnClickListener()
+    }
+    binding.alertsContainer.setOnClickListener {
+      alertsOnClickListener()
     }
 
   }
@@ -252,7 +262,14 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     startActivityForResult(intent, REQ_EDIT_POSITIONS)
   }
 
-
+  private fun alertsOnClickListener() {
+    analytics.trackClickEvent(
+      ClickEvent("EditAlertsClick")
+    )
+    val intent = Intent(this, AddAlertsActivity::class.java)
+    intent.putExtra(AddAlertsActivity.TICKER, quote.symbol)
+    startActivityForResult(intent, REQ_EDIT_ALERTS)
+  }
 
   private fun fetchData() {
     if (!::quote.isInitialized) return
@@ -314,10 +331,29 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     if (isInPortfolio) {
       binding.positionsContainer.visibility = View.VISIBLE
       binding.positionsHeader.visibility = View.VISIBLE
+      binding.alertHeader.visibility = View.VISIBLE
       binding.numShares!!.text = quote.numSharesString()
       binding.equityValue!!.text = quote.priceFormat.format(quote.holdings())
 
-
+      val alertAbove = quote.getAlertAbove()
+      val alertBelow = quote.getAlertBelow()
+      if (alertAbove > 0.0f || alertBelow > 0.0f) {
+        binding.alertsContainer.visibility = View.VISIBLE
+      } else {
+        binding.alertsContainer.visibility = View.GONE
+      }
+      if (alertAbove > 0.0f) {
+        binding.alertAbove!!.visibility = View.VISIBLE
+        binding.alertAbove!!.setText(appPreferences.selectedDecimalFormat.format(alertAbove))
+      } else {
+        binding.alertAbove!!.visibility = View.GONE
+      }
+      if (alertBelow > 0.0f) {
+        binding.alertBelow!!.visibility = View.VISIBLE
+        binding.alertBelow!!.setText(appPreferences.selectedDecimalFormat.format(alertBelow))
+      } else {
+        binding.alertBelow!!.visibility = View.GONE
+      }
 
       if (quote.hasPositions()) {
         binding.totalGainLoss!!.visibility = View.VISIBLE
@@ -344,6 +380,8 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     } else {
       binding.positionsHeader.visibility = View.GONE
       binding.positionsContainer.visibility = View.GONE
+      binding.alertHeader.visibility = View.GONE
+      binding.alertsContainer.visibility = View.GONE
     }
   }
 
@@ -382,7 +420,7 @@ class QuoteDetailActivity : BaseGraphActivity<ActivityQuoteDetailBinding>(), Tre
     analytics.trackGeneralEvent(GeneralEvent("NoGraphData"))
   }
 
-  // Called by xml
+//called via xml
   fun openGraph(v: View) {
     analytics.trackClickEvent(
       ClickEvent("GraphClick")

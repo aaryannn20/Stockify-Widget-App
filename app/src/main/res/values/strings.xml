@@ -56,6 +56,12 @@
   <string name="shares">Shares</string>
   <string name="equity_value">Equity Value</string>
   <string name="value">Value</string>
+  <string name="alert_above_error">Alert Below must be less than Alert Above</string>
+  <string name="alert_below_error">Alert Above must be more than Alert Below</string>
+  <string name="alert_dismiss">Dismiss</string>
+  <string name="add_alerts">Alerts</string>
+  <string name="alerts_disabled">Alerts disabled, check settings</string>
+  <string name="desc_channel_summary">Daily summary</string>
   <string name="price">Price : </string>
   <string name="add_position">Positions</string>
   <string name="add">Add</string>

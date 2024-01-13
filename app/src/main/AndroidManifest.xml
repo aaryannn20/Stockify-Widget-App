@@ -73,6 +73,11 @@
             android:theme="@style/SearchTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name="com.starorigins.stockify.widgetapp.portfolio.AddAlertsActivity"
+            android:label="@string/add_alerts"
+            android:theme="@style/AddPositionTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name="com.starorigins.stockify.widgetapp.news.QuoteDetailActivity"
             android:label="@string/news_feed"
             android:theme="@style/NewsFeedActivityTheme"
@@ -128,7 +133,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-8923644458551707~2912830105"/>
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
 
     </application>
 

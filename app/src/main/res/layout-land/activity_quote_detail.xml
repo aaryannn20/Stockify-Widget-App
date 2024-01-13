@@ -10,10 +10,12 @@
   <com.google.android.material.appbar.AppBarLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:id="@+id/app_bar_layout"
       android:elevation="0dp"
       app:elevation="0dp"
       >
     <com.google.android.material.appbar.CollapsingToolbarLayout
+        android:id="@+id/collapsing_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleEnabled="false"
@@ -21,6 +23,7 @@
       <View
           android:layout_width="match_parent"
           android:layout_height="0dp"
+          android:id="@+id/fake_status_bar"
           app:layout_collapseMode="pin"
           />
 
@@ -30,7 +33,7 @@
           android:layout_height="wrap_content"
           app:layout_collapseMode="pin"
           app:navigationIcon="?attr/homeAsUpIndicator"
-                    tools:title="AAPL"
+          tools:title="AAPL"
           />
     </com.google.android.material.appbar.CollapsingToolbarLayout>
   </com.google.android.material.appbar.AppBarLayout>
@@ -38,10 +41,12 @@
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:id="@+id/header_container"
       android:layout_marginTop="?attr/actionBarSize"
       app:layout_collapseParallaxMultiplier="1" >
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_app_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintGuide_begin="?actionBarSize"
@@ -50,7 +55,7 @@
     <TextView
         android:id="@+id/tickerName"
         style="@style/Widget.StocksWidget.TextView.BodyLightMedium"
-	      android:textAppearance="@style/TextAppearance.StocksWidget.BodyLightMedium"
+        android:textAppearance="@style/TextAppearance.StocksWidget.BodyLightMedium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.5"
         app:layout_constraintTop_toTopOf="parent"
@@ -168,7 +173,7 @@
           android:text="@string/one_day_short"/>
 
       <com.google.android.material.chip.Chip
-          android:id="@+id/one_weeks"
+          android:id="@+id/two_weeks"
           style="@style/Widget.Chip.Chart"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -210,12 +215,12 @@
           android:text="@string/max"/>
 
     </com.google.android.material.chip.ChipGroup>
-  <View
-      android:id="@+id/gradient"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:visibility="gone"
-      android:alpha="0.0" />
+    <View
+        android:id="@+id/gradient"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:alpha="0.0" />
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -258,10 +263,11 @@
               android:gravity="center_vertical"
               android:text="@string/positions"
               style="@style/Widget.StocksWidget.TextView.LabelMedium"
-	android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
+              android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
               />
 
           <ImageView
+              android:id="@+id/edit_positions"
               android:layout_width="20dp"
               android:layout_height="20dp"
               android:src="@drawable/ic_edit"
@@ -275,105 +281,110 @@
             android:visibility="gone"
             tools:visibility="visible"
             android:layout_margin="8dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
           <LinearLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal"
+              android:orientation="vertical"
               >
+
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="8dp"
+                android:orientation="horizontal"
                 >
-              <TextView
-                  android:layout_width="wrap_content"
+              <LinearLayout
+                  android:layout_width="0dp"
                   android:layout_height="wrap_content"
-                  android:layout_marginBottom="2dp"
+                  android:layout_weight="0.5"
                   android:gravity="center"
-                  tools:text="3"
-                  android:textColor="?attr/colorOnSurfaceVariant"
-                  style="@style/Widget.StocksWidget.TextView.TitleMedium"
-	android:textAppearance="@style/TextAppearance.StocksWidget.TitleMedium"
-                  />
-              <TextView
-                  android:layout_width="wrap_content"
+                  android:orientation="vertical"
+                  android:padding="8dp"
+                  >
+                <TextView
+                    android:id="@+id/numShares"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:gravity="center"
+                    tools:text="3"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    style="@style/Widget.StocksWidget.TextView.TitleMedium"
+                    android:textAppearance="@style/TextAppearance.StocksWidget.TitleMedium"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shares"
+                    android:textColor="?attr/colorOnSurface"
+                    />
+
+              </LinearLayout>
+              <LinearLayout
+                  android:layout_width="0dp"
                   android:layout_height="wrap_content"
-                  android:text="@string/shares"
-                  android:textColor="?attr/colorOnSurface"
-                  />
+                  android:layout_weight="0.5"
+                  android:gravity="center"
+                  android:orientation="vertical"
+                  android:padding="8dp"
+                  >
+                <com.robinhood.ticker.TickerView
+                    android:id="@+id/equityValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:gravity="center"
+                    android:textSize="@dimen/xlarge_text"
+                    tools:text="$2,400.00"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textAppearance="@style/TextAppearance.StocksWidget.TickerBold"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/equity_value"
+                    />
+
+              </LinearLayout>
 
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="8dp"
-                >
-              <com.robinhood.ticker.TickerView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="2dp"
-                  android:gravity="center"
-                  android:textSize="@dimen/xlarge_text"
-                  tools:text="$2,400.00"
-                  android:textColor="?attr/colorOnSurfaceVariant"
-                  android:textAppearance="@style/TextAppearance.StocksWidget.TickerBold"
-                  />
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="@string/equity_value"
-                  />
 
-            </LinearLayout>
+            <com.starorigins.stockify.widgetapp.ui.StockFieldView
+                android:id="@+id/average_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                app:center_text="true"
+                app:name="@string/average_price"
+                app:or="horizontal"
+                app:size="@dimen/larger_text"
+                />
+
+            <com.starorigins.stockify.widgetapp.ui.StockFieldView
+                android:id="@+id/total_gain_loss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                app:center_text="true"
+                app:name="@string/gain_loss"
+                app:or="horizontal"
+                app:size="@dimen/larger_text"
+                />
+
+            <com.starorigins.stockify.widgetapp.ui.StockFieldView
+                android:id="@+id/day_change"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                app:center_text="true"
+                app:name="@string/day_change_amount"
+                app:or="horizontal"
+                app:size="@dimen/larger_text"
+                />
 
           </LinearLayout>
-
-          <com.starorigins.stockify.widgetapp.ui.StockFieldView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="8dp"
-              android:layout_weight="1"
-              app:center_text="true"
-              app:name="@string/average_price"
-              app:or="horizontal"
-              app:size="@dimen/larger_text"
-              />
-
-          <com.starorigins.stockify.widgetapp.ui.StockFieldView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="8dp"
-              android:layout_weight="1"
-              app:center_text="true"
-              app:name="@string/gain_loss"
-              app:or="horizontal"
-              app:size="@dimen/larger_text"
-              />
-
-          <com.starorigins.stockify.widgetapp.ui.StockFieldView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="8dp"
-              android:layout_weight="1"
-              app:center_text="true"
-              app:name="@string/day_change_amount"
-              app:or="horizontal"
-              app:size="@dimen/larger_text"
-              />
-
-        </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <LinearLayout
             android:layout_width="match_parent"
@@ -394,10 +405,11 @@
               android:gravity="center_vertical"
               android:text="@string/alerts"
               style="@style/Widget.StocksWidget.TextView.LabelMedium"
-	android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
+              android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
               />
 
           <ImageView
+              android:id="@+id/edit_alerts"
               android:layout_width="20dp"
               android:layout_height="20dp"
               android:src="@drawable/ic_edit"
@@ -411,65 +423,38 @@
             android:visibility="gone"
             tools:visibility="visible"
             android:layout_margin="8dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
-          <com.starorigins.stockify.widgetapp.ui.StockFieldView
+          <LinearLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="8dp"
-              android:layout_weight="1"
-              app:center_text="true"
-              app:name="@string/alert_above"
-              app:or="horizontal"
-              app:size="@dimen/larger_text"
-              />
+              android:orientation="vertical"
+              >
 
-          <com.starorigins.stockify.widgetapp.ui.StockFieldView
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="8dp"
-              android:layout_weight="1"
-              app:center_text="true"
-              app:name="@string/alert_below"
-              app:or="horizontal"
-              app:size="@dimen/larger_text"
-              />
+            <com.starorigins.stockify.widgetapp.ui.StockFieldView
+                android:id="@+id/alert_above"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                app:center_text="true"
+                app:name="@string/alert_above"
+                app:or="horizontal"
+                app:size="@dimen/larger_text"
+                />
 
-        </LinearLayout>
+            <com.starorigins.stockify.widgetapp.ui.StockFieldView
+                android:id="@+id/alert_below"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                app:center_text="true"
+                app:name="@string/alert_below"
+                app:or="horizontal"
+                app:size="@dimen/larger_text"
+                />
+
+          </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/notes_header"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            >
-
-          <TextView
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_vertical"
-              android:layout_weight="1"
-              android:gravity="center_vertical"
-              android:text="@string/notes"
-              style="@style/Widget.StocksWidget.TextView.LabelMedium"
-	android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
-              />
-
-          <ImageView
-              android:layout_width="20dp"
-              android:layout_height="20dp"
-              android:src="@drawable/ic_edit"
-              />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -481,6 +466,7 @@
             >
 
           <TextView
+              android:id="@+id/notes_display"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginStart="8dp"
@@ -492,26 +478,6 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.StocksWidget.BodyLightMedium"
-            style="@style/Widget.StocksWidget.TextView.BodyLightMedium"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            />
-
-        <TextView
-            android:id="@+id/website"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.StocksWidget.ItalicLabelLarge"
-            style="@style/Widget.StocksWidget.TextView.ItalicLabelLarge"
-            android:layout_margin="16dp"
-            />
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -520,10 +486,11 @@
             android:gravity="center_vertical"
             android:text="@string/recent_news"
             style="@style/Widget.StocksWidget.TextView.LabelMedium"
-	android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
+            android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
             />
 
         <ViewFlipper
+            android:id="@+id/news_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
@@ -542,7 +509,7 @@
               android:gravity="center"
               android:text="@string/error_fetching_news"
               style="@style/Widget.StocksWidget.TextView.FetchError"
-	android:textAppearance="@style/TextAppearance.StocksWidget.FetchError"
+              android:textAppearance="@style/TextAppearance.StocksWidget.FetchError"
               />
 
           <TextView
@@ -552,7 +519,7 @@
               android:gravity="center"
               android:text="@string/no_data"
               style="@style/Widget.StocksWidget.TextView.FetchError"
-	android:textAppearance="@style/TextAppearance.StocksWidget.FetchError"
+              android:textAppearance="@style/TextAppearance.StocksWidget.FetchError"
               />
 
           <androidx.recyclerview.widget.RecyclerView

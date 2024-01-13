@@ -447,46 +447,15 @@
 
         </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/alerts_container"
-            android:id="@+id/notes_header"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            >
-
-          <TextView
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_vertical"
-              android:layout_weight="1"
-              android:gravity="center_vertical"
-              android:text="@string/notes"
-              style="@style/Widget.StocksWidget.TextView.LabelMedium"
-	android:textAppearance="@style/TextAppearance.StocksWidget.LabelMedium"
-              />
-
-          <ImageView
-              android:layout_width="20dp"
-              android:layout_height="20dp"
-              android:src="@drawable/ic_edit"
-              />
-
-        </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/notes_header"
             android:id="@+id/notes_container"
-            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:orientation="vertical"
-            >
+            android:visibility="gone"
+            tools:layout_editor_absoluteX="8dp">
 
           <TextView
               android:layout_width="match_parent"
@@ -494,34 +463,9 @@
               android:layout_marginStart="8dp"
               android:layout_marginLeft="8dp"
               android:layout_marginEnd="8dp"
-              android:layout_marginRight="8dp"
-              />
+              android:layout_marginRight="8dp" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/notes_container"
-            android:textAppearance="@style/TextAppearance.StocksWidget.BodyLightMedium"
-            style="@style/Widget.StocksWidget.TextView.BodyLightMedium"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            />
-
-        <TextView
-            android:id="@+id/website"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description"
-            android:textAppearance="@style/TextAppearance.StocksWidget.ItalicLabelLarge"
-            style="@style/Widget.StocksWidget.TextView.ItalicLabelLarge"
-            android:layout_margin="16dp"
-            />
 
       </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

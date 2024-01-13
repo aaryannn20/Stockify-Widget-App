@@ -10,9 +10,14 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.elevation.SurfaceColors
 import com.starorigins.stockify.widgetapp.BuildConfig
 import com.starorigins.stockify.widgetapp.R
@@ -21,6 +26,7 @@ import com.starorigins.stockify.widgetapp.base.BaseActivity
 import com.starorigins.stockify.widgetapp.components.InAppMessage
 import com.starorigins.stockify.widgetapp.databinding.ActivityMainBinding
 import com.starorigins.stockify.widgetapp.hasNotificationPermission
+import com.starorigins.stockify.widgetapp.model.RefreshWorker
 import com.starorigins.stockify.widgetapp.network.NewsProvider
 import com.starorigins.stockify.widgetapp.news.NewsFeedFragment
 import com.starorigins.stockify.widgetapp.notifications.NotificationsHandler
@@ -30,6 +36,7 @@ import com.starorigins.stockify.widgetapp.viewBinding
 import com.starorigins.stockify.widgetapp.widget.WidgetDataProvider
 import com.starorigins.stockify.widgetapp.widget.WidgetsFragment
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -58,6 +65,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
   private val viewModel: MainViewModel by viewModels()
   private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
   lateinit var mAdView : AdView
+  private var mInterstitialAd: InterstitialAd? = null
+
 
   override fun onCreate(savedInstanceState: Bundle?) {
     installSplashScreen()
@@ -85,6 +94,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     mAdView = findViewById(R.id.adView)
     val adRequest = AdRequest.Builder().build()
     mAdView.loadAd(adRequest)
+
 
     if (VERSION.SDK_INT >= 33) {
       requestPermissionLauncher = registerForActivityResult(RequestPermission()) { granted ->
