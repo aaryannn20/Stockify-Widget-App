@@ -52,48 +52,32 @@
         app:layout_scrollFlags="enterAlways|snap"
         />
 
-<!--    <com.google.android.material.tabs.TabLayout-->
-<!--        android:id="@+id/stock_tabs"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_collapseMode="none"-->
-<!--        app:tabGravity="fill"-->
-<!--        app:tabIndicatorHeight="2dp"-->
-<!--        app:tabMode="fixed"-->
-<!--        app:tabSelectedTextColor="?attr/colorOnSurface"-->
-<!--        app:tabTextAppearance="@style/TabTextAppearence"-->
-<!--        app:tabTextColor="?attr/colorOnSurfaceVariant"-->
-<!--        />-->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:src="@drawable/bg_header"
+        app:tabGravity="fill"
+        app:tabIndicatorHeight="2dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="?attr/colorOnSurface"
+        app:tabTextAppearance="@style/TabTextAppearence"
+        app:tabTextColor="?attr/colorOnSurfaceVariant" />
 
   </com.google.android.material.appbar.AppBarLayout>
 
-  <LinearLayout
-      android:id="@+id/trending_holder"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      app:layout_behavior="@string/appbar_scrolling_view_behavior"
-      >
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/trending_recycler_view"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:scrollbars="none"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-
-
-  </LinearLayout>
-
-
-
-
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/search_results_recycler_view"
       android:layout_width="match_parent"
+      android:background="@color/black"
       android:layout_height="wrap_content"
       android:scrollbars="none"
       android:visibility="gone"

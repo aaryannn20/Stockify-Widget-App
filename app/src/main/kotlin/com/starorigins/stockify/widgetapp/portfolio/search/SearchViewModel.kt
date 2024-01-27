@@ -69,6 +69,28 @@ class SearchViewModel @Inject constructor(
     } else emit(emptyList())
   }
 
+  fun fetchIndianStocks(): LiveData<List<Quote>> = liveData {
+    val trendingResult = newsProvider.fetchIndianStocks(true)
+    if (trendingResult.wasSuccessful) {
+      emit(trendingResult.data)
+    } else emit(emptyList())
+  }
+
+  fun fetchIndices(): LiveData<List<Quote>> = liveData {
+    val trendingResult = newsProvider.fetchIndices(true)
+    if (trendingResult.wasSuccessful) {
+      emit(trendingResult.data)
+    } else emit(emptyList())
+  }
+
+
+  fun fetchCrypto(): LiveData<List<Quote>> = liveData {
+    val trendingResult = newsProvider.fetchTrendingCrypto(true)
+    if (trendingResult.wasSuccessful) {
+      emit(trendingResult.data)
+    } else emit(emptyList())
+  }
+
   fun doesSuggestionExist(sug: Suggestion) =
     stocksProvider.hasTicker(sug.symbol) && widgetDataProvider.widgetCount <= 1
 

@@ -7,4 +7,9 @@ interface ApeWisdom {
 
   @GET("filter/stocks")
   suspend fun getTrendingStocks(): TrendingResult
+
+  @GET("filter/CryptoCurrency")
+  suspend fun getTrendingCrypto(): TrendingResult
+
+
 }

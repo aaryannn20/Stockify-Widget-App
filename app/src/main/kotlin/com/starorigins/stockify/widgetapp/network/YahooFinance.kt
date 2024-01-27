@@ -18,6 +18,8 @@ interface YahooFinance {
   )
   suspend fun getStocks(@Query(value = "symbols") query: String): Response<YahooResponse>
 }
+
+
 interface YahooFinanceInitialLoad {
   @GET("/")
   suspend fun initialLoad(): Response<String?>
@@ -25,6 +27,8 @@ interface YahooFinanceInitialLoad {
   @POST
   suspend fun cookieConsent(@Url url: String?, @Body body: RequestBody): Response<String?>
 }
+
+
 interface YahooFinanceCrumb {
 
   @GET(

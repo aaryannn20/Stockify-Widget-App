@@ -30,6 +30,7 @@
                     android:layout_height="wrap_content"
                     android:text="Welcome back!"
                     android:textSize="26sp"
+                    android:textColor="@color/black"
                     android:fontFamily="@font/titilliumweb_semi_bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -42,13 +43,25 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:layout_width="324dp"
-        android:layout_height="228dp"
-        android:src="@drawable/login"
+<!--    <ImageView-->
+<!--        android:layout_width="324dp"-->
+<!--        android:layout_height="228dp"-->
+<!--        android:src="@drawable/login"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loginAnimation"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/login_anim"
+        tools:layout_editor_absoluteY="65dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
@@ -59,9 +72,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-
         <EditText
-            android:id="@+id/etMail"
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginStart="24dp"
@@ -70,27 +82,28 @@
             android:ems="10"
             android:inputType="textEmailAddress"
             android:textSize="19sp"
-
-            android:backgroundTint="#CFD2D8"
-            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            android:backgroundTint="#000000"
+            android:textColorHint="#000000"
             android:hint="Email address"
             android:autofillHints="emailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <EditText
-            android:id="@+id/etPass"
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="101dp"
             android:layout_marginEnd="24dp"
-            android:backgroundTint="#CFD2D8"
+            android:backgroundTint="#000000"
             android:ems="10"
+            android:textColor="@color/black"
             android:hint="Password"
             android:inputType="textPassword"
-            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox.Dense"
             android:textColorHint="@color/black"
             android:textSize="19sp"
             android:autofillHints="password"
@@ -103,11 +116,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="167dp"
+            android:layout_marginEnd="24dp"
             android:fontFamily="@font/titilliumweb_semi_bold"
             android:text="Forgot your password?"
             android:textColor="@color/dash_bg"
             android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="@+id/etPass"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button

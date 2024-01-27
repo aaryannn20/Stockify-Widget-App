@@ -436,7 +436,7 @@
                 android:layout_margin="8dp"
                 android:layout_weight="1"
                 app:center_text="true"
-                app:name="@string/alert_above"
+                app:name="@string/target_alert"
                 app:or="horizontal"
                 app:size="@dimen/larger_text"
                 />
@@ -448,7 +448,7 @@
                 android:layout_margin="8dp"
                 android:layout_weight="1"
                 app:center_text="true"
-                app:name="@string/alert_below"
+                app:name="@string/alert_percentage"
                 app:or="horizontal"
                 app:size="@dimen/larger_text"
                 />

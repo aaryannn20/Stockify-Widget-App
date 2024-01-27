@@ -68,4 +68,7 @@
   <style name="WebViewTheme" parent="StocksWidget.App.Theme" />
 
   <style name="DbViewerTheme" parent="StocksWidget.App.Theme" />
+  
+  
+
 </resources>

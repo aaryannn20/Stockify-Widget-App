@@ -174,7 +174,46 @@ class NetworkModule {
     return retrofit.create(YahooFinanceMostActive::class.java)
   }
 
-  @Provides @Singleton internal fun provideGoogleNewsApi(
+    @Provides @Singleton internal fun provideYahooFinanceIndianMostActive(
+        @ApplicationContext context: Context,
+        @Named("yahoo") okHttpClient: OkHttpClient,
+    ): YahooIndianStockMostActive {
+        val retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(context.getString(R.string.yahoo_finance_endpoint))
+            .addConverterFactory(JsoupConverterFactory())
+            .build()
+        return retrofit.create(YahooIndianStockMostActive::class.java)
+    }
+
+
+    @Provides @Singleton internal fun provideYahooFinanceCrypto(
+        @ApplicationContext context: Context,
+        @Named("yahoo") okHttpClient: OkHttpClient,
+    ): YahooFinanceCrypto {
+        val retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(context.getString(R.string.yahoo_finance_endpoint))
+            .addConverterFactory(JsoupConverterFactory())
+            .build()
+        return retrofit.create(YahooFinanceCrypto::class.java)
+    }
+
+    @Provides @Singleton internal fun provideYahooFinanceIndices(
+        @ApplicationContext context: Context,
+        @Named("yahoo") okHttpClient: OkHttpClient,
+    ): YahooFinanceIndices {
+        val retrofit = Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(context.getString(R.string.yahoo_finance_endpoint))
+            .addConverterFactory(JsoupConverterFactory())
+            .build()
+        return retrofit.create(YahooFinanceIndices::class.java)
+    }
+
+
+
+    @Provides @Singleton internal fun provideGoogleNewsApi(
     @ApplicationContext context: Context,
     okHttpClient: OkHttpClient
   ): GoogleNewsApi {

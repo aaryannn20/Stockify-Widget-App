@@ -1,42 +1,46 @@
 package com.starorigins.stockify.widgetapp
 
-import android.annotation.SuppressLint
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.starorigins.stockify.widgetapp.databinding.ActivityLoginBinding
 import com.starorigins.stockify.widgetapp.home.MainActivity
+import com.starorigins.stockify.widgetapp.model.User
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
+
 
 
 @AndroidEntryPoint
 class login : AppCompatActivity() {
-
-    private lateinit var auth: FirebaseAuth
-    @SuppressLint("MissingInflatedId")
+    private val binding by lazy {
+        ActivityLoginBinding.inflate(layoutInflater)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(binding.root)
 
-        auth= FirebaseAuth.getInstance()
 
-        val signUpTXT= findViewById<TextView>(R.id.signUpTxt)
-        val loginBTN= findViewById<Button>(R.id.loginBTN)
+        val text = "<font color=#1E88E5>Sign Up</font>"
+        binding.signUpTxt.setText(Html.fromHtml(text))
+
+        val animation = findViewById<LottieAnimationView>(R.id.loginAnimation)
+        animation.playAnimation()
+
+
         val forgot_pass= findViewById<TextView>(R.id.forgot_email)
 
         forgot_pass.setOnClickListener {
-            val viewPassReset: View= layoutInflater.inflate(R.layout.reset_password, null)
+            val viewPassReset: View = layoutInflater.inflate(R.layout.reset_password, null)
             val dialogReset= BottomSheetDialog(this)
             dialogReset.setContentView(viewPassReset)
 
@@ -46,7 +50,7 @@ class login : AppCompatActivity() {
             send_mail.setOnClickListener {
                 if (!reset_email.text.isNullOrBlank() || !reset_email.text.isNullOrEmpty()){
                     if (isEmailValid(reset_email.text.toString())){
-                        auth.sendPasswordResetEmail(reset_email.text.toString())
+                        Firebase.auth.sendPasswordResetEmail(reset_email.text.toString())
                             .addOnCompleteListener {
                                 if (it.isSuccessful){
                                     Toast.makeText(this, "Email sent successfully! Check mail!", Toast.LENGTH_SHORT).show()
@@ -66,57 +70,32 @@ class login : AppCompatActivity() {
             dialogReset.show()
         }
 
-        loginBTN.setOnClickListener {
-            loginUser()
-        }
 
-        signUpTXT.setOnClickListener {
-            startActivity(Intent(this, register::class.java))
-        }
-    }
 
-    private fun loginUser(){
-        val email= findViewById<EditText>(R.id.etMail).text.toString()
-        val password= findViewById<EditText>(R.id.etPass).text.toString()
+        binding.loginBTN.setOnClickListener {
+            if(binding.email.text.toString().equals("") or
+                binding.password.text.toString().equals("")){
+                Toast.makeText(this@login, "Please fill the details", Toast.LENGTH_SHORT).show()
+            }else{
+                var user = User(binding.email.text.toString(),
+                    binding.password.text.toString())
 
-        if (checkEmail() && checkPass()){
-            lifecycleScope.launch(Dispatchers.IO) {
-                try {
-                    auth.signInWithEmailAndPassword(email, password).await()
-                    withContext(Dispatchers.Main){
-                        checkLoggedInStatus()
+                Firebase.auth.signInWithEmailAndPassword(user.email!! , user.password!!)
+                    .addOnCompleteListener{
+                        if(it.isSuccessful){
+                            startActivity(Intent(this@login, MainActivity::class.java))
+                            finish()
+                        }else{
+                            Toast.makeText(this@login, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+                        }
                     }
-                } catch (e: Exception){
-                    withContext(Dispatchers.Main){
-                        Toast.makeText(this@login, e.message, Toast.LENGTH_LONG).show()
-                    }
-                }
             }
-        } else {
-            Toast.makeText(this@login, "Either Email or Pass is having issues", Toast.LENGTH_SHORT).show()
-        }
-    }
 
-    private fun checkLoggedInStatus(){
-        if (auth.currentUser==null){
-            Toast.makeText(this@login, "Something went wrong, try again!", Toast.LENGTH_LONG)
-        } else {
-            val intent= Intent(this, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
         }
-    }
-
-    private fun checkEmail(): Boolean {
-        val email= findViewById<EditText>(R.id.etMail).text.toString()
-        if (email.isEmpty()) {
-            Toast.makeText(this@login, "Email is needed to proceed forward", Toast.LENGTH_SHORT).show()
-            return false
-        } else if (!Regex("^\\w+[.-]?\\w+@\\w+([.-]?\\w+)+\$").matches(email)) {
-            Toast.makeText(this@login, "Email should be in the specified format", Toast.LENGTH_SHORT).show()
-            return false
+        binding.signUpTxt.setOnClickListener {
+            startActivity(Intent(this@login, register::class.java))
+            finish()
         }
-        return true
     }
 
     fun isEmailValid(email: String): Boolean {
@@ -125,14 +104,4 @@ class login : AppCompatActivity() {
     }
 
 
-    private fun checkPass(): Boolean {
-        val password= findViewById<EditText>(R.id.etPass).text.toString()
-        if (password.isEmpty()){
-            Toast.makeText(this@login, "Password can't be empty", Toast.LENGTH_SHORT).show()
-            return false
-        } else if (password.isNotEmpty() && password.length<8){
-            Toast.makeText(this@login, "Password should be minimum 8 characters long", Toast.LENGTH_SHORT).show()
-        }
-        return true
-    }
 }

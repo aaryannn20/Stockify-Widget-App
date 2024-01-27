@@ -91,19 +91,6 @@ class AddAlertsActivity : BaseActivity<ActivityAlertsBinding>() {
       }
     }
 
-    if (alertAbove > 0.0f && alertBelow > 0.0f) {
-      if (binding.alertAboveInputEditText.isFocused) {
-        if (success && alertBelow >= alertAbove) {
-          binding.alertAboveInputLayout.error = getString(R.string.alert_below_error)
-          success = false
-        }
-      } else {
-        if (success && alertBelow >= alertAbove) {
-          binding.alertBelowInputLayout.error = getString(R.string.alert_above_error)
-          success = false
-        }
-      }
-    }
     if (success) {
       viewModel.setAlerts(alertAbove, alertBelow)
       updateActivityResult()

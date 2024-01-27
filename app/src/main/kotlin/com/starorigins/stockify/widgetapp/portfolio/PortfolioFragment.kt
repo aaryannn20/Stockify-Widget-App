@@ -116,13 +116,13 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ChildFragmen
 
     savedInstanceState?.let { state ->
       val listViewState = state.getParcelable<Parcelable>(LIST_INSTANCE_STATE)
-      listViewState?.let { binding.stockList?.layoutManager?.onRestoreInstanceState(it) }
+      listViewState?.let { binding.stockList.layoutManager?.onRestoreInstanceState(it) }
     }
     val widgetData = viewModel.dataForWidgetId(widgetId)
     if (widgetData.getTickers().isEmpty()) {
-      binding.viewFlipper!!.displayedChild = 0
+      binding.viewFlipper.displayedChild = 0
     } else {
-      binding.viewFlipper!!.displayedChild = 1
+      binding.viewFlipper.displayedChild = 1
     }
     viewModel.portfolio.observe(viewLifecycleOwner) {
       stocksAdapter.refresh()
@@ -146,7 +146,7 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ChildFragmen
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    val listViewState = binding.stockList?.layoutManager?.onSaveInstanceState()
+    val listViewState = binding.stockList.layoutManager?.onSaveInstanceState()
     listViewState?.let {
       outState.putParcelable(LIST_INSTANCE_STATE, it)
     }

@@ -9,4 +9,5 @@
   <color name="positive_green">#ccff66</color>
   <color name="positive_green_dark">#009900</color>
   <color name="text_2">#fff3f3f3</color>
+  <color name="viewDashLowOpac">#222222</color>
 </resources>

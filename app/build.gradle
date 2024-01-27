@@ -176,6 +176,8 @@ dependencies {
 
   implementation "com.google.dagger:hilt-android:2.44"
     implementation 'com.google.firebase:firebase-auth:22.3.0'
+  implementation 'com.google.firebase:firebase-firestore:24.10.0'
+    implementation 'androidx.preference:preference:1.2.1'
     kapt "com.google.dagger:hilt-compiler:2.44"
 
   implementation "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
@@ -214,12 +216,8 @@ dependencies {
   testImplementation "androidx.annotation:annotation:1.6.0"
   testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$COROUTINES_VERSION"
   testImplementation "androidx.room:room-testing:$ROOM_VERSION"
-
-
   implementation "com.airbnb.android:lottie:$LOTTIE_ANIMATION_VERSION"
-
-  
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
-
+  implementation 'com.google.android.gms:play-services-ads:22.6.0'
+  implementation 'com.google.android.gms:play-services-auth:20.7.0'
 }
 

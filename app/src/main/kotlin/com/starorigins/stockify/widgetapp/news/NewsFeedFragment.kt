@@ -93,15 +93,7 @@ class NewsFeedFragment : BaseFragment<FragmentNewsFeedBinding>(), ChildFragment,
     CustomTabs.openTab(requireContext(), article.url)
   }
 
-  override fun onClickQuote(quote: Quote) {
-    analytics.trackClickEvent(ClickEvent("InstrumentClick"))
-    val intent = Intent(requireContext(), QuoteDetailActivity::class.java)
-    intent.putExtra(QuoteDetailActivity.TICKER, quote.symbol)
-    startActivity(intent)
-  }
-
   // Child Fragment
-
   override fun scrollToTop() {
     binding.recyclerView.smoothScrollToPosition(0)
   }

@@ -15,8 +15,8 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
 import com.starorigins.stockify.widgetapp.base.BaseFragment
 import com.starorigins.stockify.widgetapp.components.InAppMessage
@@ -26,13 +26,13 @@ import com.starorigins.stockify.widgetapp.network.data.Suggestion
 import com.starorigins.stockify.widgetapp.news.QuoteDetailActivity
 import com.starorigins.stockify.widgetapp.portfolio.search.SuggestionsAdapter.SuggestionClickListener
 import com.starorigins.stockify.widgetapp.showDialog
-import com.starorigins.stockify.widgetapp.ui.SpacingDecoration
 import com.starorigins.stockify.widgetapp.viewBinding
 import com.starorigins.stockify.widgetapp.widget.WidgetDataProvider
 import com.starorigins.stockify.widgetapp.R
-import com.starorigins.stockify.widgetapp.R.dimen
 import com.starorigins.stockify.widgetapp.databinding.FragmentSearchBinding
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -58,8 +58,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
   private val viewModel: SearchViewModel by viewModels()
   private lateinit var suggestionsAdapter: SuggestionsAdapter
   private lateinit var trendingAdapter: TrendingStocksAdapter
+  private lateinit var viewPagerAdapter: ViewPagerAdapter
   override val simpleName: String = "SearchFragment"
-
   private var selectedWidgetId: Int = -1
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,19 +90,30 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
       }
     }
 
-    trendingAdapter = TrendingStocksAdapter { quote ->
-      analytics.trackClickEvent(ClickEvent("InstrumentClick"))
-      val intent = Intent(requireContext(), QuoteDetailActivity::class.java)
-      intent.putExtra(QuoteDetailActivity.TICKER, quote.symbol)
-      startActivity(intent)
-    }
 
-    binding.trendingRecyclerView?.layoutManager = GridLayoutManager(activity, 1)
-    binding.trendingRecyclerView?.addItemDecoration(
-      SpacingDecoration(requireContext().resources.getDimensionPixelSize(dimen.list_spacing_double))
-    )
+    binding.viewPager!!.adapter = ViewPagerAdapter(childFragmentManager)
+    binding.tabLayout!!.setupWithViewPager(binding.viewPager)
 
-    binding.trendingRecyclerView?.adapter = trendingAdapter
+//    binding.viewPager!!.adapter = ViewPagerAdapter(childFragmentManager,lifecycle)
+//    TabLayoutMediator(binding.tabLayout!!, binding.viewPager!!){ tab, position->
+//      when(position){
+//        0->{
+//          tab.text="Indices"
+//        }
+//        1->{
+//          tab.text="BSE/NSE"
+//        }
+//      }
+//    }.attach()
+
+//    viewPagerAdapter = ViewPagerAdapter(childFragmentManager)
+////    viewPagerAdapter.addFragments(PopularFragment(),"Trending")
+////    viewPagerAdapter.addFragments(IndicesFragment(),"Indices")
+//    viewPagerAdapter.addFragments(IndFragment(),"BSE/NSE")
+//    viewPagerAdapter.addFragments(CryptoFragment(),"Crypto")
+//    binding.viewPager!!.adapter = viewPagerAdapter
+//    binding.tabLayout!!.setupWithViewPager(binding.viewPager)
+//
 
 
     suggestionsAdapter = SuggestionsAdapter(this)
@@ -117,9 +128,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
     if (viewModel.searchResult.value?.wasSuccessful == true) {
       suggestionsAdapter.setData(viewModel.searchResult.value!!.data)
     }
-    viewModel.fetchTrendingStocks().observe(viewLifecycleOwner) { quotes ->
-      if (quotes.isNotEmpty()) trendingAdapter.setData(quotes)
-    }
+
     viewModel.searchResult.observe(viewLifecycleOwner) {
       if (it.wasSuccessful) {
         suggestionsAdapter.setData(it.data)
@@ -180,7 +189,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
         .replace(" ".toRegex(), "")
     if (query.isNotEmpty()) {
       binding.searchResultsRecyclerView?.isVisible = true
-      binding.trendingHolder?.isVisible = false
+//      binding.trendingHolder?.isVisible = false
       if (requireActivity().isNetworkOnline()) {
         viewModel.fetchResults(query)
       } else {
@@ -188,7 +197,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
       }
     } else {
       binding.searchResultsRecyclerView?.isVisible = false
-      binding.trendingHolder?.isVisible = true
+//      binding.trendingHolder?.isVisible = true
     }
   }
 
@@ -251,6 +260,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
 
   override fun scrollToTop() {
     binding.searchResultsRecyclerView?.smoothScrollToPosition(0)
-    binding.trendingRecyclerView?.smoothScrollToPosition(0)
+//    binding.trendingRecyclerView?.smoothScrollToPosition(0)
   }
 }

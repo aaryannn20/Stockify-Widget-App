@@ -1,207 +1,87 @@
 package com.starorigins.stockify.widgetapp.settings
 
-import android.Manifest
+import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.os.Build
+import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Switch
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.SwitchCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
-import androidx.preference.CheckBoxPreference
-import androidx.preference.ListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
 import com.starorigins.stockify.widgetapp.AppPreferences
 import com.starorigins.stockify.widgetapp.R
-import com.starorigins.stockify.widgetapp.components.InAppMessage
-import com.starorigins.stockify.widgetapp.hasNotificationPermission
-import com.starorigins.stockify.widgetapp.home.ChildFragment
-import com.starorigins.stockify.widgetapp.home.MainViewModel
-import com.starorigins.stockify.widgetapp.model.StocksProvider
-import com.starorigins.stockify.widgetapp.notifications.NotificationsHandler
-import com.starorigins.stockify.widgetapp.repo.QuotesDB
-import com.starorigins.stockify.widgetapp.settings.PreferenceChangeListener
-import com.starorigins.stockify.widgetapp.widget.WidgetDataProvider
+import com.starorigins.stockify.widgetapp.logout_account
+import com.starorigins.stockify.widgetapp.profile
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.threeten.bp.format.TextStyle
-import timber.log.Timber
-import java.io.File
-import java.util.Locale
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class SettingsFragment : PreferenceFragmentCompat(), ChildFragment,
-    ActivityCompat.OnRequestPermissionsResultCallback {
+class SettingsFragment : Fragment() {
+    lateinit var auth: FirebaseAuth
 
-    @Inject
-    internal lateinit var stocksProvider: StocksProvider
-    @Inject
-    internal lateinit var widgetDataProvider: WidgetDataProvider
-    @Inject
-    internal lateinit var preferences: SharedPreferences
-    @Inject
-    internal lateinit var appPreferences: AppPreferences
-    @Inject
-    internal lateinit var db: QuotesDB
-    @Inject
-    internal lateinit var notificationsHandler: NotificationsHandler
-
-    private val mainViewModel: MainViewModel by activityViewModels()
-
-    // ChildFragment
-
-    override fun scrollToTop() {
-        listView.smoothScrollToPosition(0)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
-    override fun onViewCreated(
-        view: View,
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) {
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_settingschild, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (resources.getBoolean(R.bool.isTablet)) {
-            listView.layoutParams.width = resources.getDimensionPixelSize(R.dimen.tablet_width)
-            (listView.layoutParams as FrameLayout.LayoutParams).gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP
+        val userName= view.findViewById<TextView>(R.id.tvNameMore)
+        val viewProfile= view.findViewById<View>(R.id.viewProfile)
+        val viewEmail= view.findViewById<ConstraintLayout>(R.id.viewProfileEmail)
+        val emailImgBtn= view.findViewById<ImageView>(R.id.emailVerifyBtn)
+        val emailImgTv= view.findViewById<TextView>(R.id.emailVerifyTv)
+        val changeMail= view.findViewById<TextView>(R.id.changeMail)
+        val accountDelete= view.findViewById<ConstraintLayout>(R.id.accountDelete)
+        val contact = view.findViewById<ConstraintLayout>(R.id.viewHelp)
+
+        contact.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","aryanmishra15243@gmail.com",null)))
         }
-        listView.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-        listView.isVerticalScrollBarEnabled = false
-        setupSimplePreferencesScreen()
-    }
 
-    override fun onPause() {
-        super.onPause()
-        broadcastUpdateWidget()
-    }
 
-    override fun onCreatePreferences(
-        savedInstanceState: Bundle?,
-        rootKey: String?
-    ) {
-        setPreferencesFromResource(R.xml.prefs, rootKey)
-    }
+        accountDelete.setOnClickListener {
+            startActivity(Intent(requireContext(), logout_account::class.java))
+        }
 
-    private fun setupSimplePreferencesScreen() {
-        run {
-            val themePref = findPreference<ListPreference>(AppPreferences.SETTING_APP_THEME)
-            val selectedPref = appPreferences.themePref
-            themePref.setValueIndex(selectedPref)
-            themePref.summary = themePref.entries[selectedPref]
-            themePref.onPreferenceChangeListener = object : PreferenceChangeListener() {
-                override fun onPreferenceChange(
-                    preference: Preference,
-                    newValue: Any
-                ): Boolean {
-                    val stringValue = newValue.toString()
-                    val listPreference = preference as ListPreference
-                    val index = listPreference.findIndexOfValue(stringValue)
-                    appPreferences.themePref = index
-                    themePref.summary = listPreference.entries[index]
-                    AppCompatDelegate.setDefaultNightMode(appPreferences.nightMode)
-                    requireActivity().recreate()
-                    return true
-                }
+        viewProfile.setOnClickListener {
+            startActivity(Intent(requireContext(), profile::class.java))
+        }
+        auth= FirebaseAuth.getInstance()
+
+        userName.text= auth.currentUser?.displayName
+
+        if (auth.currentUser!!.isEmailVerified){
+            emailImgBtn.visibility= View.GONE
+            changeMail.visibility= View.VISIBLE
+            emailImgTv.text= "Email id verified"
+            emailImgTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.deactiveText))
+            view.findViewById<ConstraintLayout>(R.id.viewProfileEmail).backgroundTintList= ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.viewDashLowOpac)
+            )
+        } else {
+            viewEmail.setOnClickListener {
+                auth.currentUser!!.sendEmailVerification()
+                Toast.makeText(requireContext(), "Verification mail send to registered mail id!", Toast.LENGTH_SHORT).show()
             }
         }
-
-        run {
-            val refreshPreference = findPreference(AppPreferences.UPDATE_INTERVAL) as ListPreference
-            val refreshIndex = preferences.getInt(AppPreferences.UPDATE_INTERVAL, 1)
-            refreshPreference.setValueIndex(refreshIndex)
-            refreshPreference.summary = refreshPreference.entries[refreshIndex]
-            refreshPreference.onPreferenceChangeListener = object : PreferenceChangeListener() {
-                override fun onPreferenceChange(
-                    preference: Preference,
-                    newValue: Any
-                ): Boolean {
-                    val stringValue = newValue.toString()
-                    val listPreference = preference as ListPreference
-                    val index = listPreference.findIndexOfValue(stringValue)
-                    preferences.edit()
-                        .putInt(AppPreferences.UPDATE_INTERVAL, index)
-                        .apply()
-                    stocksProvider.schedule()
-                    refreshPreference.summary = refreshPreference.entries[index]
-                    InAppMessage.showMessage(requireView(), R.string.refresh_updated_message)
-                    broadcastUpdateWidget()
-                    return true
-                }
-            }
-        }
-
-        run {
-            val fontSizePreference = findPreference(AppPreferences.FONT_SIZE) as ListPreference
-            val size = preferences.getInt(AppPreferences.FONT_SIZE, 1)
-            fontSizePreference.setValueIndex(size)
-            fontSizePreference.summary = fontSizePreference.entries[size]
-            fontSizePreference.onPreferenceChangeListener = object : PreferenceChangeListener() {
-                override fun onPreferenceChange(
-                    preference: Preference,
-                    newValue: Any
-                ): Boolean {
-                    val stringValue = newValue.toString()
-                    val listPreference = preference as ListPreference
-                    val index = listPreference.findIndexOfValue(stringValue)
-                    preferences.edit()
-                        .remove(AppPreferences.FONT_SIZE)
-                        .putInt(AppPreferences.FONT_SIZE, index)
-                        .apply()
-                    broadcastUpdateWidget()
-                    fontSizePreference.summary = fontSizePreference.entries[index]
-                    InAppMessage.showMessage(requireView(), R.string.text_size_updated_message)
-                    return true
-                }
-            }
-        }
-
-        run {
-            val notifPref = findPreference<CheckBoxPreference>(AppPreferences.SETTING_NOTIFICATION_ALERTS)
-            notifPref.isChecked = appPreferences.notificationAlerts()
-            notifPref.onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener { _, newValue ->
-                    appPreferences.setNotificationAlerts(newValue as Boolean)
-                    if (newValue == true && Build.VERSION.SDK_INT >= 33 && !requireContext().hasNotificationPermission()) {
-                        mainViewModel.requestNotificationPermission()
-                    }
-                    true
-                }
-        }
-    }
-
-    private fun <T : Preference> findPreference(key: String): T {
-        return super.findPreference(key)!!
-    }
-
-    private fun needsPermissionGrant(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return false
-        }
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(
-            requireActivity(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) != PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun askForExternalStoragePermissions(reqCode: Int) {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ), reqCode
-        )
-    }
-
-    private fun broadcastUpdateWidget() {
-        widgetDataProvider.broadcastUpdateAllWidgets()
     }
 }

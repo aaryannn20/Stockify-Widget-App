@@ -1,5 +1,6 @@
 package com.starorigins.stockify.widgetapp.network
 
+import com.starorigins.stockify.widgetapp.AppPreferences
 import com.starorigins.stockify.widgetapp.model.FetchException
 import com.starorigins.stockify.widgetapp.model.FetchResult
 import com.starorigins.stockify.widgetapp.network.data.Quote
@@ -19,7 +20,7 @@ class StocksApi @Inject constructor(
   private val yahooFinanceInitialLoad: YahooFinanceInitialLoad,
   private val yahooFinanceCrumb: YahooFinanceCrumb,
   private val yahooFinance: YahooFinance,
-  private val appPreferences: com.starorigins.stockify.widgetapp.AppPreferences,
+  private val appPreferences: AppPreferences,
   private val yahooQuoteDetails: YahooQuoteDetails,
   private val suggestionApi: SuggestionApi
 ) {
@@ -177,7 +178,7 @@ class StocksApi @Inject constructor(
         change = this.change
     )
     quote.stockExchange = this.exchange ?: ""
-    quote.currencyCode = this.currency ?: "USD"
+    quote.currencyCode = this.currency ?: ""
     quote.annualDividendRate = this.annualDividendRate
     quote.annualDividendYield = this.annualDividendYield
     quote.region = this.region

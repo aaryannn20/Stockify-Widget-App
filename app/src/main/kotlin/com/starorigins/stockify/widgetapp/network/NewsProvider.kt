@@ -19,6 +19,9 @@ class NewsProvider @Inject constructor(
   private val yahooNewsApi: YahooFinanceNewsApi,
   private val apeWisdom: ApeWisdom,
   private val yahooFinanceMostActive: YahooFinanceMostActive,
+  private val yahooIndianStockMostActive: YahooIndianStockMostActive,
+  private val yahooFinanceCrypto: YahooFinanceCrypto,
+  private val yahooFinanceIndices: YahooFinanceIndices,
   private val stocksApi: StocksApi
 ) {
 
@@ -41,7 +44,8 @@ class NewsProvider @Inject constructor(
       } catch (ex: Exception) {
         Timber.w(ex)
         return@withContext FetchResult.failure<List<NewsArticle>>(
-            FetchException("Error fetching news", ex))
+          FetchException("Error fetching news", ex)
+        )
       }
     }
 
@@ -63,11 +67,12 @@ class NewsProvider @Inject constructor(
       } catch (ex: Exception) {
         Timber.w(ex)
         return@withContext FetchResult.failure<List<NewsArticle>>(
-            FetchException("Error fetching news", ex))
+          FetchException("Error fetching news", ex)
+        )
       }
     }
 
-  suspend fun fetchTrendingStocks(useCache: Boolean = false): FetchResult<List<Quote>> =
+  suspend fun fetchIndianStocks(useCache: Boolean = false): FetchResult<List<Quote>> =
     withContext(Dispatchers.IO) {
       try {
         if (useCache && cachedTrendingStocks.isNotEmpty()) {
@@ -76,13 +81,15 @@ class NewsProvider @Inject constructor(
 
         // adding this extra try/catch because html format can change and parsing will fail
         try {
-          val mostActiveHtml = yahooFinanceMostActive.getMostActive()
+          val mostActiveHtml = yahooIndianStockMostActive.getIndianMostActive()
           if (mostActiveHtml.isSuccessful) {
             val doc = mostActiveHtml.body()!!
             val elements = doc.select("fin-streamer")
             val symbols = ArrayList<String>()
             for (element in elements) {
-              if (element.hasAttr("data-symbol") && element.attr("class").equals("fw(600)", ignoreCase = true)) {
+              if (element.hasAttr("data-symbol") && element.attr("class")
+                  .equals("fw(600)", ignoreCase = true)
+              ) {
                 val symbol = element.attr("data-symbol")
                 if (!symbols.contains(symbol)) symbols.add(symbol)
               }
@@ -111,7 +118,162 @@ class NewsProvider @Inject constructor(
       } catch (ex: Exception) {
         Timber.w(ex)
         return@withContext FetchResult.failure<List<Quote>>(
-            FetchException("Error fetching trending", ex))
+          FetchException("Error fetching trending", ex)
+        )
       }
-  }
+    }
+
+
+  suspend fun fetchTrendingStocks(useCache: Boolean = false): FetchResult<List<Quote>> =
+    withContext(Dispatchers.IO) {
+      try {
+        if (useCache && cachedTrendingStocks.isNotEmpty()) {
+          return@withContext FetchResult.success(cachedTrendingStocks)
+        }
+
+        // adding this extra try/catch because html format can change and parsing will fail
+        try {
+          val mostActiveHtml = yahooFinanceMostActive.getMostActive()
+          if (mostActiveHtml.isSuccessful) {
+            val doc = mostActiveHtml.body()!!
+            val elements = doc.select("fin-streamer")
+            val symbols = ArrayList<String>()
+            for (element in elements) {
+              if (element.hasAttr("data-symbol") && element.attr("class")
+                  .equals("fw(600)", ignoreCase = true)
+              ) {
+                val symbol = element.attr("data-symbol")
+                if (!symbols.contains(symbol)) symbols.add(symbol)
+              }
+            }
+            if (symbols.isNotEmpty()) {
+              Timber.d("symbols: ${symbols.joinToString(",")}")
+              val mostActiveStocks = stocksApi.getStocks(symbols.toList())
+              if (mostActiveStocks.wasSuccessful) {
+                cachedTrendingStocks = mostActiveStocks.data
+              }
+              return@withContext mostActiveStocks
+            }
+          }
+        } catch (e: Exception) {
+          Timber.w(e)
+        }
+
+        // fallback to apewisdom api
+        val result = apeWisdom.getTrendingStocks().results
+        val data = result.map { it.ticker }
+        val trendingResult = stocksApi.getStocks(data)
+        if (trendingResult.wasSuccessful) {
+          cachedTrendingStocks = trendingResult.data
+        }
+        return@withContext trendingResult
+      } catch (ex: Exception) {
+        Timber.w(ex)
+        return@withContext FetchResult.failure<List<Quote>>(
+          FetchException("Error fetching trending", ex)
+        )
+      }
+    }
+
+  suspend fun fetchIndices(useCache: Boolean = false): FetchResult<List<Quote>> =
+    withContext(Dispatchers.IO) {
+      try {
+        if (useCache && cachedTrendingStocks.isNotEmpty()) {
+          return@withContext FetchResult.success(cachedTrendingStocks)
+        }
+
+        // adding this extra try/catch because html format can change and parsing will fail
+        try {
+          val mostActiveHtml = yahooFinanceIndices.getMostIndices()
+          if (mostActiveHtml.isSuccessful) {
+            val doc = mostActiveHtml.body()!!
+            val elements = doc.select("fin-streamer")
+            val symbols = ArrayList<String>()
+            for (element in elements) {
+              if (element.hasAttr("data-symbol") && element.attr("class")
+                  .equals("fw(600)", ignoreCase = true)
+              ) {
+                val symbol = element.attr("data-symbol")
+                if (!symbols.contains(symbol)) symbols.add(symbol)
+              }
+            }
+            if (symbols.isNotEmpty()) {
+              Timber.d("symbols: ${symbols.joinToString(",")}")
+              val mostActiveStocks = stocksApi.getStocks(symbols.toList())
+              if (mostActiveStocks.wasSuccessful) {
+                cachedTrendingStocks = mostActiveStocks.data
+              }
+              return@withContext mostActiveStocks
+            }
+          }
+        } catch (e: Exception) {
+          Timber.w(e)
+        }
+
+        // fallback to apewisdom api
+        val result = apeWisdom.getTrendingStocks().results
+        val data = result.map { it.ticker }
+        val trendingResult = stocksApi.getStocks(data)
+        if (trendingResult.wasSuccessful) {
+          cachedTrendingStocks = trendingResult.data
+        }
+        return@withContext trendingResult
+      } catch (ex: Exception) {
+        Timber.w(ex)
+        return@withContext FetchResult.failure<List<Quote>>(
+          FetchException("Error fetching trending", ex)
+        )
+      }
+    }
+
+  suspend fun fetchTrendingCrypto(useCache: Boolean = false): FetchResult<List<Quote>> =
+    withContext(Dispatchers.IO) {
+      try {
+        if (useCache && cachedTrendingStocks.isNotEmpty()) {
+          return@withContext FetchResult.success(cachedTrendingStocks)
+        }
+
+        // adding this extra try/catch because html format can change and parsing will fail
+        try {
+          val mostActiveHtml = yahooFinanceCrypto.getMostCrypto()
+          if (mostActiveHtml.isSuccessful) {
+            val doc = mostActiveHtml.body()!!
+            val elements = doc.select("fin-streamer")
+            val symbols = ArrayList<String>()
+            for (element in elements) {
+              if (element.hasAttr("data-symbol") && element.attr("class")
+                  .equals("fw(600)", ignoreCase = true)
+              ) {
+                val symbol = element.attr("data-symbol")
+                if (!symbols.contains(symbol)) symbols.add(symbol)
+              }
+            }
+            if (symbols.isNotEmpty()) {
+              Timber.d("symbols: ${symbols.joinToString(",")}")
+              val mostActiveStocks = stocksApi.getStocks(symbols.toList())
+              if (mostActiveStocks.wasSuccessful) {
+                cachedTrendingStocks = mostActiveStocks.data
+              }
+              return@withContext mostActiveStocks
+            }
+          }
+        } catch (e: Exception) {
+          Timber.w(e)
+        }
+
+        // fallback to apewisdom api
+        val result = apeWisdom.getTrendingStocks().results
+        val data = result.map { it.ticker }
+        val trendingResult = stocksApi.getStocks(data)
+        if (trendingResult.wasSuccessful) {
+          cachedTrendingStocks = trendingResult.data
+        }
+        return@withContext trendingResult
+      } catch (ex: Exception) {
+        Timber.w(ex)
+        return@withContext FetchResult.failure<List<Quote>>(
+          FetchException("Error fetching trending", ex)
+        )
+      }
+    }
 }

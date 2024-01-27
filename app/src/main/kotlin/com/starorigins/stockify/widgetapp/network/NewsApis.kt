@@ -24,3 +24,19 @@ interface YahooFinanceMostActive {
   @GET("most-active")
   suspend fun getMostActive(): Response<Document>
 }
+
+interface YahooIndianStockMostActive {
+  @GET("screener/unsaved/6101cb2d-0b45-40db-9202-688781758718")
+  suspend fun getIndianMostActive(): Response<Document>
+}
+
+
+interface YahooFinanceCrypto {
+  @GET("crypto")
+  suspend fun getMostCrypto(): Response<Document>
+}
+
+interface YahooFinanceIndices {
+  @GET("world-indices")
+  suspend fun getMostIndices(): Response<Document>
+}
