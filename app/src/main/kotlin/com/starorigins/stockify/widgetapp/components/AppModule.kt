@@ -6,6 +6,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.room.Room
 import androidx.work.WorkManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.starorigins.stockify.widgetapp.analytics.Analytics
 import com.starorigins.stockify.widgetapp.analytics.GeneralProperties
 import com.starorigins.stockify.widgetapp.components.AppClock.AppClockImpl
@@ -28,6 +29,7 @@ import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 import com.starorigins.stockify.widgetapp.AppPreferences
 import com.starorigins.stockify.widgetapp.analytics.AnalyticsImpl
+import dagger.Lazy
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -52,6 +54,11 @@ class AppModule {
     @ApplicationContext context: Context,
     properties: dagger.Lazy<GeneralProperties>
   ): Analytics = AnalyticsImpl(context, properties)
+
+    @Provides @Singleton fun provideFirebaseAnalytics(
+        @ApplicationContext context: Context,
+        properties: Lazy<GeneralProperties>
+    ): String = FirebaseAnalytics.Event.SCREEN_VIEW
 
   @Provides @Singleton fun provideQuotesDB(@ApplicationContext context: Context): QuotesDB {
     return Room.databaseBuilder(

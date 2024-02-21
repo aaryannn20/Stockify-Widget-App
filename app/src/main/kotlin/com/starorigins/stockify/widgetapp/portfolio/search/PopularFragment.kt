@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import com.starorigins.stockify.widgetapp.R
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
 import com.starorigins.stockify.widgetapp.base.BaseFragment
@@ -52,6 +55,7 @@ class PopularFragment: BaseFragment<FragmentPopularBinding>(), ChildFragment, Te
     }
 
     private val viewModel: SearchViewModel by viewModels()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var trendingAdapter: TrendingStocksAdapter
     private var selectedWidgetId: Int = -1
     override val simpleName: String = "Popular Fragment"
@@ -61,6 +65,7 @@ class PopularFragment: BaseFragment<FragmentPopularBinding>(), ChildFragment, Te
         arguments?.let {
             setData(it)
         }
+        firebaseAnalytics = Firebase.analytics
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,6 +76,12 @@ class PopularFragment: BaseFragment<FragmentPopularBinding>(), ChildFragment, Te
             val intent = Intent(requireContext(), QuoteDetailActivity::class.java)
             intent.putExtra(QuoteDetailActivity.TICKER, quote.symbol)
             startActivity(intent)
+
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "TrendingStock")
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TrendingStockClicked")
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+
         }
 
 
@@ -83,6 +94,12 @@ class PopularFragment: BaseFragment<FragmentPopularBinding>(), ChildFragment, Te
 
         viewModel.fetchTrendingStocks().observe(viewLifecycleOwner) { quotes ->
             if (quotes.isNotEmpty()) {
+
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "TrendingStock")
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TrendingStockClicked")
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+
                 trendingAdapter.setData(quotes)
             }
         }

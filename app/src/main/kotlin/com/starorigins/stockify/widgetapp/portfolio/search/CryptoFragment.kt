@@ -12,6 +12,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import com.starorigins.stockify.widgetapp.R
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
 import com.starorigins.stockify.widgetapp.base.BaseFragment
@@ -50,18 +53,25 @@ class CryptoFragment: BaseFragment<FragmentCryptoBinding>(), ChildFragment, Text
     private lateinit var trendingAdapter: TrendingStocksAdapter
     private var selectedWidgetId: Int = -1
     override val simpleName: String = "Crypto Fragment"
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             setData(it)
         }
+        firebaseAnalytics = Firebase.analytics
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         trendingAdapter = TrendingStocksAdapter { quote ->
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Crypto")
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CryptoClicked")
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+
             analytics.trackClickEvent(ClickEvent("InstrumentClick"))
             val intent = Intent(requireContext(), QuoteDetailActivity::class.java)
             intent.putExtra(QuoteDetailActivity.TICKER, quote.symbol)
@@ -80,6 +90,11 @@ class CryptoFragment: BaseFragment<FragmentCryptoBinding>(), ChildFragment, Text
         viewModel.fetchCrypto().observe(viewLifecycleOwner) { quotes ->
             if (quotes.isNotEmpty()) {
                 trendingAdapter.setData(quotes)
+
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Crypto")
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CryptoClicked")
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             }
         }
 

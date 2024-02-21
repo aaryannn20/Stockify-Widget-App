@@ -13,9 +13,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
 import com.starorigins.stockify.widgetapp.base.BaseFragment
@@ -58,7 +60,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
   private val viewModel: SearchViewModel by viewModels()
   private lateinit var suggestionsAdapter: SuggestionsAdapter
   private lateinit var trendingAdapter: TrendingStocksAdapter
-  private lateinit var viewPagerAdapter: ViewPagerAdapter
+
   override val simpleName: String = "SearchFragment"
   private var selectedWidgetId: Int = -1
 
@@ -90,31 +92,30 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
       }
     }
 
+    configureTabLayout()
 
-    binding.viewPager!!.adapter = ViewPagerAdapter(childFragmentManager)
-    binding.tabLayout!!.setupWithViewPager(binding.viewPager)
 
-//    binding.viewPager!!.adapter = ViewPagerAdapter(childFragmentManager,lifecycle)
-//    TabLayoutMediator(binding.tabLayout!!, binding.viewPager!!){ tab, position->
+//    val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
+//    val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
+//    val fragments = listOf(PopularFragment(),IndicesFragment(), IndFragment(), CryptoFragment())
+//    val adapter = ViewPagerAdapter(fragments,childFragmentManager,lifecycle)
+//    viewPager.adapter = adapter
+//    TabLayoutMediator(tabLayout, viewPager) { tab, position ->
 //      when(position){
 //        0->{
-//          tab.text="Indices"
+//          tab.text = "Trending"
 //        }
 //        1->{
-//          tab.text="BSE/NSE"
+//          tab.text = "Indices"
+//        }
+//        2->{
+//          tab.text = "BSE/NSE"
+//        }
+//        3->{
+//          tab.text = "Crypto"
 //        }
 //      }
 //    }.attach()
-
-//    viewPagerAdapter = ViewPagerAdapter(childFragmentManager)
-////    viewPagerAdapter.addFragments(PopularFragment(),"Trending")
-////    viewPagerAdapter.addFragments(IndicesFragment(),"Indices")
-//    viewPagerAdapter.addFragments(IndFragment(),"BSE/NSE")
-//    viewPagerAdapter.addFragments(CryptoFragment(),"Crypto")
-//    binding.viewPager!!.adapter = viewPagerAdapter
-//    binding.tabLayout!!.setupWithViewPager(binding.viewPager)
-//
-
 
     suggestionsAdapter = SuggestionsAdapter(this)
     binding.searchResultsRecyclerView?.layoutManager = LinearLayoutManager(activity)
@@ -146,13 +147,22 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), ChildFragment, Sug
     }
   }
 
+  private fun configureTabLayout(){
+    val viewPager = view?.findViewById<ViewPager>(R.id.viewPager)
+    val tabLayout = view?.findViewById<TabLayout>(R.id.tab_layout)
+    viewPager?.adapter = ViewPagerAdapter(childFragmentManager, 4)
+    viewPager?.offscreenPageLimit = 4
+    tabLayout?.setupWithViewPager(viewPager)
 
-
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    outState.putInt(ARG_WIDGET_ID, selectedWidgetId)
-    super.onSaveInstanceState(outState)
   }
+
+
+
+//
+//  override fun onSaveInstanceState(outState: Bundle) {
+//    outState.putInt(ARG_WIDGET_ID, selectedWidgetId)
+//    super.onSaveInstanceState(outState)
+//  }
 
   private fun addTickerToWidget(
     ticker: String,

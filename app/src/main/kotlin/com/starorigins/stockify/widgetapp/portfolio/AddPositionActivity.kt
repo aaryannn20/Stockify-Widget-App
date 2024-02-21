@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.starorigins.stockify.widgetapp.AppPreferences
 import com.starorigins.stockify.widgetapp.base.BaseActivity
 import com.starorigins.stockify.widgetapp.components.InAppMessage
@@ -29,6 +30,7 @@ class AddPositionActivity : BaseActivity<ActivityPositionsBinding>() {
     internal lateinit var ticker: String
     override val simpleName = "AddPositionActivity"
     private val viewModel: AddPositionViewModel by viewModels()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,7 @@ class AddPositionActivity : BaseActivity<ActivityPositionsBinding>() {
                 addPositionView(holding)
             }
         }
+    firebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
 
     private fun onAddClicked() {
@@ -104,6 +107,11 @@ class AddPositionActivity : BaseActivity<ActivityPositionsBinding>() {
             }
         }
         dismissKeyboard()
+
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "AddPortfolio")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "portfolio")
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
 
     private fun updateActivityResult() {

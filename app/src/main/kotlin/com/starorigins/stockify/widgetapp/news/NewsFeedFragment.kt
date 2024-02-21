@@ -9,6 +9,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
 import com.starorigins.stockify.widgetapp.CustomTabs
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
 import com.starorigins.stockify.widgetapp.base.BaseFragment
@@ -35,6 +39,7 @@ class NewsFeedFragment : BaseFragment<FragmentNewsFeedBinding>(), ChildFragment,
 
   override val binding: (FragmentNewsFeedBinding) by viewBinding(FragmentNewsFeedBinding::inflate)
   private lateinit var adapter: TrendingAdapter
+  private lateinit var firebaseAnalytics: FirebaseAnalytics
   private val viewModel: NewsFeedViewModel by viewModels()
   override val simpleName: String
     get() = "NewsFeedFragment"
@@ -50,6 +55,9 @@ class NewsFeedFragment : BaseFragment<FragmentNewsFeedBinding>(), ChildFragment,
       }
       insets
     }
+
+    firebaseAnalytics = Firebase.analytics
+
     adapter = TrendingAdapter(this)
     binding.recyclerView.layoutManager = LinearLayoutManager(activity)
     binding.recyclerView.addItemDecoration(
@@ -91,6 +99,9 @@ class NewsFeedFragment : BaseFragment<FragmentNewsFeedBinding>(), ChildFragment,
 
   override fun onClickNewsArticle(article: NewsArticle) {
     CustomTabs.openTab(requireContext(), article.url)
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM){
+      param(FirebaseAnalytics.Param.METHOD,"newsClicked")
+    }
   }
 
   // Child Fragment

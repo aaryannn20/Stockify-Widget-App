@@ -63,7 +63,8 @@
         app:tabMode="fixed"
         app:tabSelectedTextColor="?attr/colorOnSurface"
         app:tabTextAppearance="@style/TabTextAppearence"
-        app:tabTextColor="?attr/colorOnSurfaceVariant" />
+        app:tabTextColor="?attr/colorOnSurfaceVariant" >
+    </com.google.android.material.tabs.TabLayout>
 
   </com.google.android.material.appbar.AppBarLayout>
 

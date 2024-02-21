@@ -9,6 +9,9 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import com.starorigins.stockify.widgetapp.R
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
 import com.starorigins.stockify.widgetapp.base.BaseFragment
@@ -45,6 +48,7 @@ class IndFragment: BaseFragment<FragmentIndBinding>(), ChildFragment, TextWatche
     }
 
     private val viewModel: SearchViewModel by viewModels()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var trendingAdapter: TrendingStocksAdapter
     private var selectedWidgetId: Int = -1
     override val simpleName: String = "India Fragment"
@@ -54,6 +58,7 @@ class IndFragment: BaseFragment<FragmentIndBinding>(), ChildFragment, TextWatche
         arguments?.let {
             setData(it)
         }
+        firebaseAnalytics = Firebase.analytics
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,6 +69,11 @@ class IndFragment: BaseFragment<FragmentIndBinding>(), ChildFragment, TextWatche
             val intent = Intent(requireContext(), QuoteDetailActivity::class.java)
             intent.putExtra(QuoteDetailActivity.TICKER, quote.symbol)
             startActivity(intent)
+
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "IndianStocks")
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "IndianStockClicked")
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
         }
 
 
@@ -77,6 +87,11 @@ class IndFragment: BaseFragment<FragmentIndBinding>(), ChildFragment, TextWatche
         viewModel.fetchIndianStocks().observe(viewLifecycleOwner) { quotes ->
             if (quotes.isNotEmpty()) {
                 trendingAdapter.setData(quotes)
+
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "IndianStock")
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "IndianStockClicked")
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             }
         }
 
@@ -128,6 +143,7 @@ class IndFragment: BaseFragment<FragmentIndBinding>(), ChildFragment, TextWatche
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(ARG_WIDGET_ID, selectedWidgetId)
         super.onSaveInstanceState(outState)
+
     }
 
 }

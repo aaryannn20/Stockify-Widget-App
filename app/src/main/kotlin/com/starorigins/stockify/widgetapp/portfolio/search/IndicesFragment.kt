@@ -12,6 +12,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import com.starorigins.stockify.widgetapp.R
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
 import com.starorigins.stockify.widgetapp.base.BaseFragment
@@ -47,6 +50,7 @@ class IndicesFragment: BaseFragment<FragmentIndicesBinding>(), ChildFragment, Te
     }
 
     private val viewModel: SearchViewModel by viewModels()
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var trendingAdapter: TrendingStocksAdapter
     private var selectedWidgetId: Int = -1
     override val simpleName: String = "Indices Fragment"
@@ -56,6 +60,7 @@ class IndicesFragment: BaseFragment<FragmentIndicesBinding>(), ChildFragment, Te
         arguments?.let {
             setData(it)
         }
+        firebaseAnalytics = Firebase.analytics
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,6 +71,12 @@ class IndicesFragment: BaseFragment<FragmentIndicesBinding>(), ChildFragment, Te
             val intent = Intent(requireContext(), QuoteDetailActivity::class.java)
             intent.putExtra(QuoteDetailActivity.TICKER, quote.symbol)
             startActivity(intent)
+
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Indices")
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "IndicesClicked")
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+
         }
 
 
@@ -80,6 +91,11 @@ class IndicesFragment: BaseFragment<FragmentIndicesBinding>(), ChildFragment, Te
         viewModel.fetchIndices().observe(viewLifecycleOwner) { quotes ->
             if (quotes.isNotEmpty()) {
                 trendingAdapter.setData(quotes)
+
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Indices")
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "IndicesClicked")
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
             }
         }
 

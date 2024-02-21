@@ -9,6 +9,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -21,6 +24,8 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class register : AppCompatActivity() {
+
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     val binding by lazy {
         ActivityRegisterBinding.inflate(layoutInflater)
@@ -38,9 +43,22 @@ class register : AppCompatActivity() {
 
         user = User()
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+            param(FirebaseAnalytics.Param.ITEM_ID, "RegisterPageActivity")
+            param(FirebaseAnalytics.Param.ITEM_NAME, "username")
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, "credential")
+        }
+
+
+
         binding.signUpBTN.setOnClickListener {
             Toast.makeText(this, "Registering User...", Toast.LENGTH_SHORT).show()
             registerUser()
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.METHOD, "signUpSuccess")
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle)
         }
 
         binding.signuptxt.setOnClickListener {

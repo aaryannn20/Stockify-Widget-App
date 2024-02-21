@@ -9,6 +9,9 @@ import android.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
 import com.starorigins.stockify.widgetapp.base.BaseFragment
 import com.starorigins.stockify.widgetapp.components.InAppMessage
@@ -54,6 +57,7 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ChildFragmen
     }
   }
 
+  private lateinit var firebaseAnalytics: FirebaseAnalytics
   override val simpleName: String = "PortfolioFragment"
   private val viewModel: PortfolioViewModel by viewModels()
   private val parent: Parent
@@ -70,6 +74,11 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ChildFragmen
       quote: Quote,
       position: Int
   ) {
+    val bundle = Bundle()
+    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "QuoteClick")
+    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "QuoteitemClicked")
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+
     analytics.trackClickEvent(ClickEvent("InstrumentClick"))
     val intent = Intent(view.context, QuoteDetailActivity::class.java)
     intent.putExtra(QuoteDetailActivity.TICKER, quote.symbol)
@@ -97,6 +106,8 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ChildFragmen
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     widgetId = requireArguments().getInt(KEY_WIDGET_ID)
+
+    firebaseAnalytics = Firebase.analytics
   }
 
   override fun onViewCreated(

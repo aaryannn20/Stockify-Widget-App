@@ -12,6 +12,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
 import com.starorigins.stockify.widgetapp.base.BaseFragment
 import com.starorigins.stockify.widgetapp.components.InAppMessage
 import com.starorigins.stockify.widgetapp.createTimeString
@@ -55,6 +59,7 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
   @Inject internal lateinit var widgetDataProvider: WidgetDataProvider
   @Inject internal lateinit var stocksProvider: StocksProvider
   private lateinit var adapter: WidgetPreviewAdapter
+  private lateinit var firebaseAnalytics: FirebaseAnalytics
   private var showAddStocks = true
   private var transparentBg = true
   internal var widgetId = 0
@@ -66,6 +71,13 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
         widgetId = requireArguments().getInt(ARG_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
     showAddStocks = requireArguments().getBoolean(ARG_SHOW_ADD_STOCKS, true)
     transparentBg = requireArguments().getBoolean(TRANSPARENT_BG, false)
+    firebaseAnalytics = Firebase.analytics
+
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+      param(FirebaseAnalytics.Param.ITEM_ID, "Widget Settings")
+      param(FirebaseAnalytics.Param.ITEM_NAME, "widgetSetting")
+      param(FirebaseAnalytics.Param.CONTENT_TYPE, "widget")
+    }
   }
 
   override fun onViewCreated(
@@ -105,7 +117,7 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
     }
     lifecycleScope.launch {
       widgetData.autoSortEnabled.collect {
-        binding.settingAutosortCheckbox!!.isChecked = it
+        binding.settingAutosortCheckbox.isChecked = it
       }
     }
   }
@@ -225,11 +237,11 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
 
 
   private fun setAutoSortSetting(widgetData: WidgetData) {
-    binding.settingAutosortCheckbox!!.isChecked = widgetData.autoSortEnabled()
+    binding.settingAutosortCheckbox.isChecked = widgetData.autoSortEnabled()
   }
 
   private fun setCurrencySetting(widgetData: WidgetData) {
-    binding.settingCurrencyCheckbox!!.isChecked = widgetData.isCurrencyEnabled()
+    binding.settingCurrencyCheckbox.isChecked = widgetData.isCurrencyEnabled()
   }
 
   private fun setBgSetting(widgetData: WidgetData) {
@@ -260,6 +272,6 @@ class WidgetSettingsFragment : BaseFragment<FragmentWidgetSettingsBinding>(), Ch
   }
 
   override fun scrollToTop() {
-    binding.scrollView!!.smoothScrollTo(0, 0)
+    binding.scrollView.smoothScrollTo(0, 0)
   }
 }

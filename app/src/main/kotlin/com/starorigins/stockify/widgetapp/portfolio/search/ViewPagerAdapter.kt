@@ -2,34 +2,29 @@ package com.starorigins.stockify.widgetapp.portfolio.search
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.Lifecycle
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 
-class ViewPagerAdapter (fm:FragmentManager):FragmentPagerAdapter(fm) {
-    override fun getCount(): Int {
-        return 3
-    }
+class ViewPagerAdapter(fm : FragmentManager, val fragmentCount : Int): FragmentStatePagerAdapter(fm) {
+
+    private val fragmentTitleList = mutableListOf("Trending", "Indices","BSE/NSE", "Crypto")
+
+    override fun getCount(): Int = fragmentCount
 
     override fun getItem(position: Int): Fragment {
-        return when(position){
-            0->{
-                IndicesFragment()
-            }
-            1->{
-                IndFragment()
-            }
-
-            else -> {
-                PopularFragment()
-
-            }
+        when(position){
+            0-> return PopularFragment()
+            1-> return IndicesFragment()
+            2-> return IndFragment()
+            3-> return CryptoFragment()
+            else -> return PopularFragment()
         }
     }
 
+    override fun getPageTitle(position: Int):CharSequence?{
+        return fragmentTitleList[position]
+    }
 
 }
-
 //class ViewPagerAdapter (fm:FragmentManager):FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 //
 //    val fragmentList = mutableListOf<Fragment>()

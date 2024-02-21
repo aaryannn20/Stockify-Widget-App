@@ -19,6 +19,9 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.material.elevation.SurfaceColors
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
 import com.starorigins.stockify.widgetapp.BuildConfig
 import com.starorigins.stockify.widgetapp.R
 import com.starorigins.stockify.widgetapp.analytics.ClickEvent
@@ -58,6 +61,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
   @Inject internal lateinit var appReviewManager: IAppReviewManager
   @Inject internal lateinit var notificationsHandler: NotificationsHandler
 
+  private lateinit var firebaseAnalytics: FirebaseAnalytics
   private var currentChild: ChildFragment? = null
   private var rateDialogShown = false
   override val simpleName: String = "MainActivity"
@@ -79,6 +83,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     binding.bottomNavigation.setOnItemSelectedListener { onNavigationItemSelected(it) }
     binding.bottomNavigation.setOnItemReselectedListener { onNavigationItemReselected(it) }
+    firebaseAnalytics = Firebase.analytics
+
 
     currentChild = if (savedInstanceState == null) {
       val fragment = SearchFragment()

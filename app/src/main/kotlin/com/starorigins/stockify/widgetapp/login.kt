@@ -11,6 +11,9 @@ import android.widget.TextView
 import android.widget.Toast
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.starorigins.stockify.widgetapp.databinding.ActivityLoginBinding
@@ -25,9 +28,20 @@ class login : AppCompatActivity() {
     private val binding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
     }
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+            param(FirebaseAnalytics.Param.ITEM_ID, "loginPageActivity")
+            param(FirebaseAnalytics.Param.ITEM_NAME, "username")
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, "credential")
+        }
+
+
+
 
 
         val text = "<font color=#1E88E5>Sign Up</font>"
@@ -70,8 +84,6 @@ class login : AppCompatActivity() {
             dialogReset.show()
         }
 
-
-
         binding.loginBTN.setOnClickListener {
             if(binding.email.text.toString().equals("") or
                 binding.password.text.toString().equals("")){
@@ -85,6 +97,9 @@ class login : AppCompatActivity() {
                         if(it.isSuccessful){
                             startActivity(Intent(this@login, MainActivity::class.java))
                             finish()
+                            val bundle = Bundle()
+                            bundle.putString(FirebaseAnalytics.Param.METHOD, "loginSuccess")
+                            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
                         }else{
                             Toast.makeText(this@login, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
                         }
@@ -95,6 +110,11 @@ class login : AppCompatActivity() {
         binding.signUpTxt.setOnClickListener {
             startActivity(Intent(this@login, register::class.java))
             finish()
+
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM){
+                param(FirebaseAnalytics.Param.METHOD,"signUpScreen")
+            }
+
         }
     }
 

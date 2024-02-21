@@ -13,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,6 +25,7 @@ import kotlinx.coroutines.withContext
 class logout_account : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +37,15 @@ class logout_account : AppCompatActivity() {
 
 
         auth= FirebaseAuth.getInstance()
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM) {
+            param(FirebaseAnalytics.Param.ITEM_ID, "logoutPageActivity")
+            param(FirebaseAnalytics.Param.ITEM_NAME, "logout")
+            param(FirebaseAnalytics.Param.CONTENT_TYPE, "AccountLogout")
+        }
+
+
 
         val containerInfo= findViewById<ConstraintLayout>(R.id.deleteInfoContainer)
         val viewDelete= findViewById<ConstraintLayout>(R.id.viewDelete)
@@ -63,6 +75,10 @@ class logout_account : AppCompatActivity() {
                         startActivity(Intent(this@logout_account, login::class.java))
                         finish()
                     }
+                    val bundle = Bundle()
+                    bundle.putString(FirebaseAnalytics.Param.METHOD, "AccountDeleted")
+                    bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "accountDeletion")
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
                 } catch (e: Exception){
                     Toast.makeText(this@logout_account, e.toString(), Toast.LENGTH_SHORT).show()
                 }
@@ -74,6 +90,10 @@ class logout_account : AppCompatActivity() {
                 auth.signOut()
                 withContext(Dispatchers.Main){
                     if (checkLoginState()){
+                        val bundle = Bundle()
+                        bundle.putString(FirebaseAnalytics.Param.METHOD, "logout")
+                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "logout")
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
 
                     }
                 }

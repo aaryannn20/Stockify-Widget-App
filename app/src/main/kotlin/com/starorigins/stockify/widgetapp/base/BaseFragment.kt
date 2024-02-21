@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.starorigins.stockify.widgetapp.analytics.Analytics
 import javax.inject.Inject
 
@@ -13,7 +14,6 @@ import javax.inject.Inject
 abstract class BaseFragment<T: ViewBinding> : Fragment() {
 
   @Inject internal lateinit var analytics: Analytics
-
   abstract val simpleName: String
   abstract val binding: T
 
