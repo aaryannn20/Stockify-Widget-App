@@ -20,7 +20,7 @@ class ViewPagerAdapter(fm : FragmentManager, val fragmentCount : Int): FragmentS
         }
     }
 
-    override fun getPageTitle(position: Int):CharSequence?{
+    override fun getPageTitle(position: Int):CharSequence{
         return fragmentTitleList[position]
     }
 

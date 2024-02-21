@@ -26,7 +26,7 @@ interface YahooFinanceMostActive {
 }
 
 interface YahooIndianStockMostActive {
-  @GET("screener/unsaved/6101cb2d-0b45-40db-9202-688781758718")
+  @GET("screener/predefined/09a035cc-f535-4249-bfae-ed95e7a9e12e?.tsrc=fin-srch")
   suspend fun getIndianMostActive(): Response<Document>
 }
 

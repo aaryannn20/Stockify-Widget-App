@@ -55,7 +55,7 @@ class SettingsFragment : Fragment() {
         val notificationCheckbox = view.findViewById<CheckBox>(R.id.notificationCheckBox)
 
         contact.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","aryanmishra15243@gmail.com",null)))
+            startActivity(Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","wearetechnobyte@gmail.com",null)))
         }
 
         if (Build.VERSION.SDK_INT >= 33 && context?.hasNotificationPermission() == true){
