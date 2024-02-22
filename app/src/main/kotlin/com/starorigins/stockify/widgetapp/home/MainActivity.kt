@@ -132,6 +132,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
   override fun onResume() {
     super.onResume()
     binding.bottomNavigation.menu.findItem(R.id.action_widgets).isEnabled = widgetDataProvider.hasWidget()
+    binding.bottomNavigation.menu.findItem(R.id.action_widgets).isVisible = true
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

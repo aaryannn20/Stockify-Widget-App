@@ -101,7 +101,7 @@ class login : AppCompatActivity() {
                             bundle.putString(FirebaseAnalytics.Param.METHOD, "loginSuccess")
                             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
                         }else{
-                            Toast.makeText(this@login, it.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@login, "Entered Credentials are Incorrect", Toast.LENGTH_SHORT).show()
                         }
                     }
             }
