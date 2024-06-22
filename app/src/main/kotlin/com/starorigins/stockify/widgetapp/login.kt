@@ -2,6 +2,7 @@ package com.starorigins.stockify.widgetapp
 
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
@@ -29,6 +30,8 @@ class login : AppCompatActivity() {
         ActivityLoginBinding.inflate(layoutInflater)
     }
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -118,15 +121,17 @@ class login : AppCompatActivity() {
 
     private fun loginUser(loginRequest: LoginRequest){
         val loginRequestCall = AuthApi.userService().loginFun(loginRequest)
-        loginRequestCall!!.enqueue(object : Callback<LoginResponse> {
+        loginRequestCall.enqueue(object : Callback<LoginResponse> {
 
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
+                    val editor = sharedPreferences.edit()
+                    editor.putBoolean("is_logged_in", true)
+                    editor.apply()
                     val loginResponse = response.body()
                     val intent = Intent(this@login, MainActivity::class.java)
                     intent.putExtra("data", loginResponse)
                     startActivity(intent)
-
                 } else {
                     val message = "An error occurred please try again later ..."
                     Toast.makeText(this@login, message, Toast.LENGTH_SHORT).show()

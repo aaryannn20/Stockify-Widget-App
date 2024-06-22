@@ -1,6 +1,7 @@
 package com.starorigins.stockify.widgetapp
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
 import android.widget.EditText
@@ -27,7 +28,7 @@ class register : AppCompatActivity() {
         ActivityRegisterBinding.inflate(layoutInflater)
     }
     lateinit var user: User
-
+    private lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -61,9 +62,7 @@ class register : AppCompatActivity() {
                 registerRequest.password = findViewById<EditText>(R.id.etPass).text.toString()
             }
             registerUser(registerRequest)
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.METHOD, "signUpSuccess")
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle)
+
         }
 
         binding.signuptxt.setOnClickListener {
@@ -74,13 +73,21 @@ class register : AppCompatActivity() {
 
     private fun registerUser(registerRequest: RegisterRequest){
         val registerResponseCall = userService().registerFun(registerRequest)
-        registerResponseCall!!.enqueue(object : Callback<RegisterResponse>{
+        registerResponseCall.enqueue(object : Callback<RegisterResponse>{
 
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                 if (response.isSuccessful) {
                     val message = "Successful ..."
+                    val editor = sharedPreferences.edit()
+                    editor.putBoolean("is_logged_in", true)
+                    editor.apply()
+
                     Toast.makeText(this@register,message,Toast.LENGTH_SHORT).show()
                     loggedIn()
+
+                    val bundle = Bundle()
+                    bundle.putString(FirebaseAnalytics.Param.METHOD, "signUpSuccess")
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle)
                 } else {
                     val message = "An error occurred please try again later ..."
                     Toast.makeText(this@register, message, Toast.LENGTH_SHORT).show()

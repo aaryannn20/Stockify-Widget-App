@@ -1,5 +1,8 @@
 package com.starorigins.stockify.widgetapp
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.lottie.LottieAnimationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
+import com.starorigins.stockify.widgetapp.home.MainActivity
 
 class SplashScreenActivity : AppCompatActivity() {
     private lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -22,20 +26,24 @@ class SplashScreenActivity : AppCompatActivity() {
         animation.playAnimation()
 
 
-//        Handler(Looper.getMainLooper()).postDelayed({
-//
-//            val intent = intent
-//
-//            if (intent.extras != null) {
-//                loginResponse = (intent.getSerializableExtra("data") as LoginResponse?)!!
-//                email = (loginResponse.email.toString())
-//                Log.e("TAG", "msg >" + loginResponse.email)
-//            }
-//            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN){
-//                param(FirebaseAnalytics.Param.METHOD, "appStart")
-//            }
-//
-//        }, 3000)
+        val sharedPreferences = getSharedPreferences("user_logged", Context.MODE_PRIVATE)!!;
+
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val isLoggedIn = sharedPreferences.contains("is_logged_in")
+            val intent = if (isLoggedIn) {
+                Intent(this, MainActivity::class.java)
+            } else {
+                Intent(this, login::class.java)
+            }
+            startActivity(intent)
+            finish()
+
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN){
+                param(FirebaseAnalytics.Param.METHOD, "appStart")
+            }
+
+        }, 3000)
 
 
     }
