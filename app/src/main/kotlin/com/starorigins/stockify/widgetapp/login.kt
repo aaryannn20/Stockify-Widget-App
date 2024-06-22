@@ -12,15 +12,15 @@ import android.widget.Toast
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.starorigins.stockify.widgetapp.databinding.ActivityLoginBinding
 import com.starorigins.stockify.widgetapp.home.MainActivity
-import com.starorigins.stockify.widgetapp.model.User
 import dagger.hilt.android.AndroidEntryPoint
-
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 @AndroidEntryPoint
@@ -89,21 +89,13 @@ class login : AppCompatActivity() {
                 binding.password.text.toString().equals("")){
                 Toast.makeText(this@login, "Please fill the details", Toast.LENGTH_SHORT).show()
             }else{
-                var user = User(binding.email.text.toString(),
-                    binding.password.text.toString())
-
-                Firebase.auth.signInWithEmailAndPassword(user.email!! , user.password!!)
-                    .addOnCompleteListener{
-                        if(it.isSuccessful){
-                            startActivity(Intent(this@login, MainActivity::class.java))
-                            finish()
-                            val bundle = Bundle()
-                            bundle.putString(FirebaseAnalytics.Param.METHOD, "loginSuccess")
-                            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
-                        }else{
-                            Toast.makeText(this@login, "Entered Credentials are Incorrect", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                val loginRequest = LoginRequest()
+                loginRequest.email = binding.email.text.toString()
+                loginRequest.password = binding.password.text.toString()
+                loginUser(loginRequest)
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.METHOD, "loginSuccess")
+                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
             }
 
         }
@@ -121,6 +113,31 @@ class login : AppCompatActivity() {
     fun isEmailValid(email: String): Boolean {
         val regexPattern = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
         return regexPattern.matches(email)
+    }
+
+
+    private fun loginUser(loginRequest: LoginRequest){
+        val loginRequestCall = AuthApi.userService().loginFun(loginRequest)
+        loginRequestCall!!.enqueue(object : Callback<LoginResponse> {
+
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    val intent = Intent(this@login, MainActivity::class.java)
+                    intent.putExtra("data", loginResponse)
+                    startActivity(intent)
+
+                } else {
+                    val message = "An error occurred please try again later ..."
+                    Toast.makeText(this@login, message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, throwable: Throwable) {
+                val message = throwable.localizedMessage
+                Toast.makeText(this@login,message,Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
 
